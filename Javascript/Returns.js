@@ -12,18 +12,15 @@ var reorganizeReturns = function () {
 	$('<textarea id="addReturnTextarea" rows="15">').insertAfter('#addReturnlineAssetTag');
 	$('#addReturnlineAssetTag').hide();
 	$('#addReturnlineLocation').hide();
-	
+
+	//Removes onclick. 	
+	$('[value="add asset"]').attr("onclick", ""); 
 	//Event Listener
 	$('[value="add asset"]').on('click', function (event){
 		$('#addOrderLineResult').val("");
 		addBatchReturnAssets();
-//Something is wrong here. I think onclick is being called.
-		event.stopPropagation();
-	//	return false; //This keeps the onclick from being run.
 	});
 }
-
-
 
 var addBatchReturnAssets = function () {
 	if($('#addReturnTextarea').val().length == 0) return false;
@@ -33,11 +30,14 @@ var addBatchReturnAssets = function () {
 	var array = $('#addReturnTextarea').val().split("\n");
 	$('#addReturnlineAssetTag').val(array[0]);
 	$('#addReturnlineLocation').val($("#addReturnLocation").val());
+	//Hacky. Should figure out how to put varible into RegExp and how to make the \n optional. 
+	$('#addReturnTextarea').val($('#addReturnTextarea').val().replace(array[0] + '\n', "").replace(array[0], "")); 
 	
-	ajaxCallback(addBatchReturnAssets);
+
 	//Strips all text from onclick so I am left with the return number.
+	ajaxCallback(addBatchReturnAssets);
 	var returnNumber = $("[value='add asset']").attr('onclick').replace(/\D/g,"");
-	addReturnlineAsset(returnNumber + "hi");
+	addReturnlineAsset(returnNumber);
 }
 
 /*
@@ -56,4 +56,17 @@ addBatchReturnAssets() {
 }
 */
 
+/*
+var addReturnlineAsset = function (arg) {
+	console.log(arg);
+}
 
+$('input[value="add asset"]').on('click', function (event){
+	$('#addOrderLineResult').val("");
+	addReturnlineAsset("My Code");
+	event.stopPropagation();
+});
+
+
+$('[value="add asset"]').off('click');
+*/
