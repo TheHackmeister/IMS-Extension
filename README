@@ -1,0 +1,35 @@
+ToDo:
+	Items added to returns should be marked as broken.
+	Make Asset autocreate forms if no ID is given. Then allow me to ask questions and send commands. 
+
+Things this fixes:
+	Clicks single PO
+	Better return page
+		More normal transfer boxes
+		Clicking on the X removes item and reloads return order
+	
+
+Things this modifies:
+	showLoading
+	hideLoading
+	addOrderLine
+		Clears results
+		Clicks print
+		Sets focus to External Asset
+	saveAsset
+		Locks the condition
+		Sets focus to product line
+	loadReturnDetail
+		Reorganizes the Returns page
+	loadDetail 
+		If in Return, runs the loadReturnDetail instead. 
+
+Things this overloads:
+	newWindow (Could do this without overloading with extension. 
+	
+Things that are broken in this addon:
+
+Things that are broken in IMS:
+	Adding product to a return. 
+	Adding product to a SO.
+	Saving a return does nothing.
