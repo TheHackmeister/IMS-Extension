@@ -30,8 +30,8 @@ var addBatchReturnAssets = function () {
 	var array = $('#addReturnTextarea').val().split("\n");
 	$('#addReturnlineAssetTag').val(array[0]);
 	$('#addReturnlineLocation').val($("#addReturnLocation").val());
-	//Hacky. Should figure out how to put varible into RegExp and how to make the \n optional. 
-	$('#addReturnTextarea').val($('#addReturnTextarea').val().replace(array[0] + '\n', "").replace(array[0], "")); 
+	var re = RegExp(array[0] +"(?:\n|)");
+	$('#addReturnTextarea').val($('#addReturnTextarea').val().replace(re, "")); 
 	
 
 	//Strips all text from onclick so I am left with the return number.
