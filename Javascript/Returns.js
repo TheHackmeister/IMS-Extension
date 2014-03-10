@@ -1,3 +1,8 @@
+/*
+loadForm('editreturn.php','','returns');
+*/
+
+// Reorganizes the returns once the load return button is pressed. 
 var loadReturnDetailOld = loadReturnDetail;
 var loadReturnDetail = function () {
 	ajaxCallback(reorganizeReturns);
@@ -17,56 +22,52 @@ var reorganizeReturns = function () {
 	$('[value="add asset"]').attr("onclick", ""); 
 	//Event Listener
 	$('[value="add asset"]').on('click', function (event){
-		$('#addOrderLineResult').val("");
+		$('#addOrderLineResult').html("");
 		addBatchReturnAssets();
 	});
 }
 
-var addBatchReturnAssets = function () {
-	if($('#addReturnTextarea').val().length == 0) return false;
-	if($('#addOrderLineResult').val().length != 0) return false;
-	//Check what the result is.
+var addBatchReturnAssets = function (oldAsset) {
+	var listLocation = $("#addReturnLocation");
+	var listOfReturns = $('#addReturnTextarea');
+	var currentAsset = $('#addReturnlineAssetTag');
+	var currentLocation = $('#addReturnlineLocation');
+	var results = $('#addOrderLineResult');
 	
-	var array = $('#addReturnTextarea').val().split("\n");
-	$('#addReturnlineAssetTag').val(array[0]);
-	$('#addReturnlineLocation').val($("#addReturnLocation").val());
-	var re = RegExp(array[0] +"(?:\n|)");
-	$('#addReturnTextarea').val($('#addReturnTextarea').val().replace(re, "")); 
-	
-
-	//Strips all text from onclick so I am left with the return number.
-	ajaxCallback(addBatchReturnAssets);
-	var returnNumber = $("[value='add asset']").attr('onclick').replace(/\D/g,"");
-	addReturnlineAsset(returnNumber);
-}
-
-/*
-loadForm('editreturn.php','','returns');
-*/
-/*
-addBatchReturnAssets() {
-	while(addReturnTextarea.length > 0)
-	{
-		Move line 1 to hidden boxes.
-		Setup ajax callback
-		Run addReturnlineAsset('90') (click?)//Should happen automatically if I don't stop event bubbling.
-		if
+	var returnID = $('#returnID').val();
+	if(results.html().length > 1) {//If there is an error. 
+		return false;
+	} else {
+		var oldA = oldAsset || false;
+		if (oldA) {
+			//Removes the old asset number.
+			var re = RegExp(oldA + "(?:\n|)");
+			listOfReturns.val(listOfReturns.val().replace(re, "")); 
+		}
+	}
+	if(listOfReturns.val().length == 0) {
+		//This reloads the page so you can view the items just inputted. It may make more sense to not refresh the page. 
+		loadReturnDetail(returnID);
+		return false;
 	}
 
+	
+	//Gets the first line of the text area.
+	var array = listOfReturns.val().split("\n");
+	currentAsset.val(array[0]);
+	currentLocation.val(listLocation.val());
+	
+	ajaxCallback(function(){addBatchReturnAssets(array[0]);});
+	addReturnlineAsset(returnID);
 }
-*/
 
-/*
-var addReturnlineAsset = function (arg) {
-	console.log(arg);
+//loadDetail is broken as of 3/10 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
+var loadDetailOld = loadDetail;
+var loadDetail = function() {
+	var returnID = $('#returnID').val() || false;
+	if(returnID) {
+		ajaxCallback(function(){loadReturnDetail(returnID);});
+	} else {
+		loadDetailOld.apply(this, arguments);
+	}	
 }
-
-$('input[value="add asset"]').on('click', function (event){
-	$('#addOrderLineResult').val("");
-	addReturnlineAsset("My Code");
-	event.stopPropagation();
-});
-
-
-$('[value="add asset"]').off('click');
-*/
