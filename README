@@ -1,7 +1,24 @@
 ToDo:
-	Items added to returns should be marked as broken.
 	Make Asset autocreate forms if no ID is given. Then allow me to ask questions and send commands. 
-
+		Items added to returns should be marked as broken.
+		Have event on finished change. 
+		If no ID given, create own fields, then give Randomly generated ID.
+	Integrate a version of HD testing.
+		Save and new number focus and select ID field.
+		Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
+			Should have in title
+			Should have specific type
+			Should have specific tests/condition
+			Should have specific specs
+	Create Options Window.
+		Integrate Shipping JS. 
+	
+	Purchase Google Developer access. 	
+	
+	Create Ultimate transfer. 
+	Integrate boxing.
+	Add by SN to Return.
+	
 Things this fixes:
 	Clicks single PO
 	Better return page
@@ -33,3 +50,4 @@ Things that are broken in IMS:
 	Adding product to a return. 
 	Adding product to a SO.
 	Saving a return does nothing.
+	Returns don't update the Managed Transfer list. 

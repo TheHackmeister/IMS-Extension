@@ -1,5 +1,6 @@
 /*
 loadForm('editreturn.php','','returns');
+transferReport();
 */
 
 // Reorganizes the returns once the load return button is pressed. 

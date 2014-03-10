@@ -2,12 +2,31 @@
 
 ////////////////////////////////////////////////
 var AssetController = function (id) {
+	if(typeof(id) == 'undefined') {
+		id = this.generateID();
+		this.generateHTML(id);
+	}
 	this.id = id;
-	this.asset = $('#' + id + 'ID');
+	
+	this.asset = $('#' + id + 'ID'); //This will receive all events. 
 	this.editAssetDiv = $('#' + id + 'EditDiv');
-	this.productDiv = $('#' + id + 'Product');
+//	this.productDiv = $('#' + id + 'Product');
 }
 AssetController.prototype = Object.create(InputForm.prototype);
+
+AssetController.prototype.generateId = function () {
+	var rand = Math.random()*(10000-1000) + 1000;
+	rand = Math.floor(rand);
+	return rand;
+}
+
+//This should check if it's on the page. 
+//Make a function to set fields. Takes id (maybe just grab from object), and a list of fields(probably just one). If they don't exist, create and add to hidden div. Returns appropriate object. 
+AssetController.prototype.generateHTML = function (id) {
+	//Attach to dashboard or maybe dashboardContent.
+	//Then create div, and attach useful divs
+	//Then attach div to page. 
+}
 
 AssetController.prototype.setAssetID = function (id) {
 	this.asset.val(id);
