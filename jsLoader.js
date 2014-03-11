@@ -6,6 +6,7 @@ var addToPage = function (loc) {
 
 addToPage("Javascript\\SetupIMS.js");
 addToPage("Javascript\\General.js");
+addToPage("Javascript\\Assets.js");
 addToPage("Javascript\\Returns.js");
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");

@@ -216,7 +216,7 @@ AssetController.prototype.getAsset = function(currentID, assetType) {
 */
 
 
-
+/*
 
 ////////////////////////////
 	
@@ -421,3 +421,4 @@ firstArray = "71,AMD ATHLON 4,Pentium 3,AMD:\
 		cpuArray.push(el.split(','));
 	});
 Laptop.prototype.cpuArray = cpuArray;
+*/
