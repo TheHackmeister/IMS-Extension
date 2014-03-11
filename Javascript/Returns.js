@@ -16,51 +16,97 @@ var reorganizeReturns = function () {
 	$('#addReturnlineLocation').insertBefore('h6:contains(Asset ID)');
 	$('<input type="text" id="addReturnLocation" rows="15">').insertBefore('h6:contains(Asset ID)');
 	$('<textarea id="addReturnTextarea" rows="15">').insertAfter('#addReturnlineAssetTag');
+	$('#addOrderLineResult').id("addReturnResult");
 	$('#addReturnlineAssetTag').hide();
 	$('#addReturnlineLocation').hide();
 
 	//Removes onclick. 	
 	$('[value="add asset"]').attr("onclick", ""); 
+	
+	var returnForm = new ReturnForm("addReturn");
+	
 	//Event Listener
-	$('[value="add asset"]').on('click', function (event){
-		$('#addOrderLineResult').html("");
-		addBatchReturnAssets();
-	});
+	$('[value="add asset"]').on('click', $.proxy(function (event){
+		this.setReturnResults("");
+		this.prepare();
+	},returnForm));
 }
 
-var addBatchReturnAssets = function (oldAsset) {
-	var listLocation = $("#addReturnLocation");
-	var listOfReturns = $('#addReturnTextarea');
-	var currentAsset = $('#addReturnlineAssetTag');
-	var currentLocation = $('#addReturnlineLocation');
-	var results = $('#addOrderLineResult');
+var ReturnForm = function (id) {
+	this.listLocation = generateElement("addReturnLocation");
+	this.listOfReturns = generateElement("addReturnTextarea");
+	this.currentAsset = generateElement("addReturnlineAssetTag");
+	this.currentLocation = generateElement("addReturnlineLocation");
+	this.results = generateElement("addReturnResult");
 	
-	var returnID = $('#returnID').val();
-	if(results.html().length > 1) {//If there is an error. 
+	this.asset = new AssetController();
+	
+	//Events
+	this.event = this.asset.event;
+	this.event.on('loaded', $.proxy(function(){
+		this.asset.setTest("resetAll");
+		this.asset.save();
+	}, this));
+	
+	this.event.on('saved', $.proxy(function(){
+		this.returnAsset();
+	}, this));
+	
+	this.event.on('returned', $.proxy(function(){
+// I have reservations about the way getAssetId works which I need to address.
+// I think it should be ok.
+		var id = this.prepare(this.asset.getAssetId());
+		this.asset.load(id);
+	}, this));
+}
+ReturnForm.prototype = Object.create(InputForm.prototype);
+
+ReturnForm.prototype.returnAsset = function (id) {
+	var changedElements = this.changeDivs(this.results, "addOrderLineResult"); 
+	ajaxCallback.call(this,function(){this.returnAssetCallback(changedElements)});
+	addReturnlineAsset(this.getReturnId());
+}
+
+ReturnForm.prototype.returnAssetCallback = function (changedElements, id) {
+	this.restoreDivs(changedElements);
+	this.event.trigger("returned");
+}
+
+ReturnForm.prototype.getReturnId = function () {
+	return $('#returnID').val();
+}
+
+ReturnForm.prototype.setReturnResults = function (text) {
+	this.results.html(text);
+}
+
+
+ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
+	if(this.results.html().length > 1) {//If there is an error. 
+//Should have error text here.
 		return false;
 	} else {
 		var oldA = oldAsset || false;
 		if (oldA) {
 			//Removes the old asset number.
 			var re = RegExp(oldA + "(?:\n|)");
-			listOfReturns.val(listOfReturns.val().replace(re, "")); 
+			this.listOfReturns.val(this.listOfReturns.val().replace(re, "")); 
 		}
 	}
-	if(listOfReturns.val().length == 0) {
+	
+	if(this.listOfReturns.val().length == 0) {
 		//This reloads the page so you can view the items just inputted. It may make more sense to not refresh the page. 
-		loadReturnDetail(returnID);
+		loadReturnDetail(this.getReturnId());
 		return false;
 	}
 
-	
 	//Gets the first line of the text area.
-	var array = listOfReturns.val().split("\n");
-	currentAsset.val(array[0]);
-	currentLocation.val(listLocation.val());
-	
-	ajaxCallback(function(){addBatchReturnAssets(array[0]);});
-	addReturnlineAsset(returnID);
+	var array = this.listOfReturns.val().split("\n");
+	this.currentAsset.val(array[0]);
+	this.currentLocation.val(listLocation.val());
+	return array[0];
 }
+
 
 //loadDetail is broken as of 3/10 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
 var loadDetailOld = loadDetail;

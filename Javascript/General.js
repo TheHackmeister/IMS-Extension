@@ -156,6 +156,7 @@ $('#dashboardBody').on('click', '#editOrderSearch [value="search"]', function(e)
 //This is the base for the form objects. Just has an ID and a function to change the ID of $ objects without trouble.
 var InputForm = function (id) {
 	this.id = id;
+	this.event;
 }
 //Could I simplify this to simple add and remove the ID?
 InputForm.prototype.changeDivs = function() {
@@ -174,6 +175,30 @@ InputForm.prototype.restoreDivs = function(elements) {
 		el.attr('id', el.originalID);
 	});
 }
+
+InputForm.prototype.generateId = function () {
+	var rand = Math.random()*(10000-1000) + 1000;
+	rand = Math.floor(rand);
+	return rand;
+}
+
+InputForm.prototype.generateElement = function (elementId) {
+	var element = $('#' + this.id + elementId);
+	if(element.length > 0) {
+		return element;
+	} else {
+		var elementDiv = $('#' + this.id + 'Div');
+		if(elementDiv.length == 0) { //there is not an element div 
+			elementDiv = $('<div/>', {id: this.id + "Div", class: this.id, style: "display:​ none;​"}).appendTo('#dashboard');
+		}
+		return $('<div/>', {id: this.id + elementId}).appendTo(elementDiv);
+	}
+}
+
+InputForm.prototype.triggerEvent = function (event) {
+	this.event.trigger(event);
+}
+
 
 //Creates an object that makes beep noises. Used for quality control checks later on.
  function SoundAlert() {

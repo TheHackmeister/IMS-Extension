@@ -1,5 +1,6 @@
 ToDo:
 	Make Asset autocreate forms if no ID is given. Then allow me to ask questions and send commands. 
+		Have error checking
 		Items added to returns should be marked as broken.
 		Have event on finished change. 
 		If no ID given, create own fields, then give Randomly generated ID.

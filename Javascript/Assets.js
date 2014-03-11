@@ -4,38 +4,20 @@
 var AssetController = function (id) {
 	if(typeof(id) == 'undefined') {
 		id = this.generateID();
-		this.generateHTML(id);
 	}
 	this.id = id;
 	
-	this.asset = $('#' + id + 'ID'); //This will receive all events. 
-	this.editAssetDiv = $('#' + id + 'EditDiv');
+	this.asset = this.generateElement("ID"); 
+	this.editAssetDiv = this.generateElement("EditDiv");
 //	this.productDiv = $('#' + id + 'Product');
+	
+	//Event Handlers 
+	this.event = this.asset;
+	this.event.on('change', $.proxy(function (){
+		this.load();
+	}, this));
 }
 AssetController.prototype = Object.create(InputForm.prototype);
-
-AssetController.prototype.generateId = function () {
-	var rand = Math.random()*(10000-1000) + 1000;
-	rand = Math.floor(rand);
-	return rand;
-}
-
-//This should check if it's on the page. 
-//Make a function to set fields. Takes id (maybe just grab from object), and a list of fields(probably just one). If they don't exist, create and add to hidden div. Returns appropriate object. 
-AssetController.prototype.generateHTML = function (id) {
-	//Attach to dashboard or maybe dashboardContent.
-	//Then create div, and attach useful divs
-	//Then attach div to page. 
-}
-
-AssetController.prototype.setAssetID = function (id) {
-	this.asset.val(id);
-//	this.asset.trigger('changed');
-}
-
-AssetController.prototype.getAssetID = function() {
-	return this.asset.val();
-}
 
 AssetController.prototype.load = function (id) {
 	if(typeof(id) == 'undefined') {
@@ -47,17 +29,139 @@ AssetController.prototype.load = function (id) {
 		return;
 	}
 	var changedElements = this.changeDivs(this.editAssetDiv, "editAssetForm"); 
-	ajaxCallback.call(this,function(){this.loadCallback(changedElements);});
+	ajaxCallback.call(this,function(){this.loadCallback(changedElements, id);});
 	selectAsset(id);
 }
 
-AssetController.prototype.loadCallback = function (changedElements) {
+AssetController.prototype.loadCallback = function (changedElements, id) {
 	this.restoreDivs(changedElements);
-//	this.productDiv.html($('#editOrderlineProductSearchText' + this.getAssetID()).val().replace("GENERIC HARD DRIVE ",""));
-//Look for deleted asset here.
-	this.asset.trigger('loaded');
+	if(!this.checkLoaded(id)) {
+//Maybe have it set event of error, and an error object. When error occurs, event handler catches it and presents what is in the error object.
+		this.error = ["The item with the ID of " + id + " doesn't exist or has been deleted.", id];
+		this.event.trigger('error');
+	} else {
+		this.event.trigger('loaded');
+	}
 }
 
+AssetController.prototype.checkLoaded = function (currentID) {
+	var assetID = $("." + this.id + " #editAssetID").val();
+	if(typeof(assetID) == 'undefined' || assetID != currentID) {
+		return false;
+	} 
+	return assetID;
+}
+
+AssetController.prototype.setAssetID = function (id) {
+	this.asset.val(id);
+	this.event.trigger('changed');
+}
+
+AssetController.prototype.getAssetID = function() {
+	return this.asset.val();
+}
+
+AssetController.prototype.save = function () {
+	ajaxCallback.call(this,function(){this.saveCallback()},3);
+	console.log("Saving asset: " + this.getAssetID());
+	saveAsset(this.getAssetID());
+}
+
+AssetController.prototype.saveCallback = function () {
+	this.event.trigger('saved');
+}
+
+AssetController.prototype.getProduct = function () {
+
+}
+
+AssetController.prototype.setProduct = function () {
+
+}
+
+AssetController.prototype.getTest = function () {
+
+}
+
+AssetController.prototype.setTest = function (number, value) {
+	//Convert Name to number
+	if(value == "reset") {
+		$('.' + this.id + 'input[name*="test' + number + '"]').prop('checked', false);
+	} else if (value == "resetAll") {
+		$('.' + this.id + ' input:radio[name*="test"]').prop('checked', false);
+	} else if (value == "pass") {
+		$('.' + this.id + ' [name="test' + number + '"]').eq(0).prop('checked', true); //0 = Pass.
+	} else if (value == "fail") {
+		$('.' + this.id + ' [name="test' + number + '"]').eq(1).prop('checked', true); //1 = Fail.
+	}
+}
+
+AssetController.prototype.getSpecText = function () {
+
+}
+
+AssetController.prototype.setSpecText = function () {
+
+}
+
+AssetController.prototype.getSpecRadio = function () {
+
+}
+
+AssetController.prototype.setSpecRadio = function () {
+
+}
+
+AssetController.prototype.getSpecCPU = function () {
+
+}
+
+AssetController.prototype.setSpecCPU = function () {
+
+}
+
+AssetController.prototype.getSN = function () {
+
+}
+
+AssetController.prototype.setSN = function () {
+
+}
+
+AssetController.prototype.getEAN = function () { //External Asset Number.
+
+}
+
+AssetController.prototype.setEAN = function () {
+
+}
+
+AssetController.prototype.getShipped = function () {
+//scrapText
+}
+
+AssetController.prototype.getScrapped = function () {
+//scrapText
+}
+
+AssetController.prototype.getShippedOrScrapped = function () {
+//scrapText
+}
+
+AssetController.prototype.getPO = function () {
+
+}
+
+AssetController.prototype.getType = function () {
+
+}
+
+AssetController.prototype.printTag = function () {
+	newWindow("id=" + this.getAssetID(), 'printassettag.php', 'assets', true);
+}
+
+
+/*
 //0 = pass, 1 = fail for condition. 
 AssetController.prototype.setCondition = function (condition) {
 	if(condition == "Pass") condition = "0";
@@ -109,27 +213,9 @@ AssetController.prototype.getAsset = function(currentID, assetType) {
 	return currentAsset;
 }
 
-AssetController.prototype.save = function (condition) {
-	ajaxCallback.call(this,function(){this.saveCallback()},3);
-	console.log("Saving asset: " + this.getAssetID());
-	saveAsset(this.getAssetID());
-}
+*/
 
-AssetController.prototype.saveCallback = function () {
-	this.asset.trigger('saved');
-}
 
-AssetController.prototype.printTag = function () {
-	newWindow("id=" + this.getAssetID(), 'printassettag.php', 'assets', true);
-}
-
-AssetController.prototype.checkLoaded = function (currentID) {
-	var assetID = $("." + this.id + " #editAssetID").val();
-	if(typeof(assetID) == 'undefined' || assetID != currentID) {
-		return false;
-	} 
-	return assetID;
-}
 
 
 ////////////////////////////
