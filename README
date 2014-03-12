@@ -1,9 +1,6 @@
 ToDo:
-	Make Asset autocreate forms if no ID is given. Then allow me to ask questions and send commands. 
-		Have error checking
-		Items added to returns should be marked as broken.
-		Have event on finished change. 
-		If no ID given, create own fields, then give Randomly generated ID.
+	Give Asset some kind of error checking.
+	
 	Integrate a version of HD testing.
 		Save and new number focus and select ID field.
 		Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
@@ -14,8 +11,9 @@ ToDo:
 	Create Options Window.
 		Integrate Shipping JS. 
 	
+	Integrate count In Location
+	Integrate Print modification.
 	Purchase Google Developer access. 	
-	
 	Create Ultimate transfer. 
 	Integrate boxing.
 	Add by SN to Return.
@@ -25,7 +23,7 @@ Things this fixes:
 	Better return page
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
-	
+		Unsets condition after return.
 
 Things this modifies:
 	showLoading
@@ -41,9 +39,11 @@ Things this modifies:
 		Reorganizes the Returns page
 	loadDetail 
 		If in Return, runs the loadReturnDetail instead. 
+	selectAsset
+		Does not override, but I do use my own version to load assets. It removes the breadcrum notification. 
 
 Things this overloads:
-	newWindow (Could do this without overloading with extension. 
+	newWindow (Could do this without overloading with extension.)
 	
 Things that are broken in this addon:
 

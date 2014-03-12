@@ -7,15 +7,16 @@ var AssetController = function (id) {
 	}
 	this.id = id;
 	
-	this.asset = this.generateElement("ID"); 
+	this.asset = this.generateInput("ID"); 
 	this.editAssetDiv = this.generateElement("EditDiv");
 //	this.productDiv = $('#' + id + 'Product');
 	
 	//Event Handlers 
 	this.event = this.asset;
-	this.event.on('change', $.proxy(function (){
+/*	this.event.on('change', $.proxy(function (){
 		this.load();
 	}, this));
+*/
 }
 AssetController.prototype = Object.create(InputForm.prototype);
 
@@ -30,7 +31,18 @@ AssetController.prototype.load = function (id) {
 	}
 	var changedElements = this.changeDivs(this.editAssetDiv, "editAssetForm"); 
 	ajaxCallback.call(this,function(){this.loadCallback(changedElements, id);});
-	selectAsset(id);
+	//selectAsset(id); //New code forces me to use my own version. Mine simply removes the breadcrum call.
+	this.selectAsset(id);
+}
+
+AssetController.prototype.selectAsset = function (id) {
+    var string = "ID="+id
+    var file = 'selectasset.php';
+
+	ajax(string, file, function(response){
+    	document.getElementById("editAssetForm").innerHTML = response;
+    	//showBreadcrumbNavIcon('edit', 'third');
+    }, 'assets');
 }
 
 AssetController.prototype.loadCallback = function (changedElements, id) {
@@ -39,8 +51,10 @@ AssetController.prototype.loadCallback = function (changedElements, id) {
 //Maybe have it set event of error, and an error object. When error occurs, event handler catches it and presents what is in the error object.
 		this.error = ["The item with the ID of " + id + " doesn't exist or has been deleted.", id];
 		this.event.trigger('error');
+		return;
 	} else {
 		this.event.trigger('loaded');
+		return;
 	}
 }
 
@@ -58,6 +72,7 @@ AssetController.prototype.setAssetID = function (id) {
 }
 
 AssetController.prototype.getAssetID = function() {
+//	return this.asset.html();
 	return this.asset.val();
 }
 
@@ -69,6 +84,10 @@ AssetController.prototype.save = function () {
 
 AssetController.prototype.saveCallback = function () {
 	this.event.trigger('saved');
+}
+
+AssetController.prototype.clearDiv = function () {
+	this.editAssetDiv.html("");
 }
 
 AssetController.prototype.getProduct = function () {
@@ -87,7 +106,7 @@ AssetController.prototype.setTest = function (number, value) {
 	//Convert Name to number
 	if(value == "reset") {
 		$('.' + this.id + 'input[name*="test' + number + '"]').prop('checked', false);
-	} else if (value == "resetAll") {
+	} else if (number == "resetAll") {
 		$('.' + this.id + ' input:radio[name*="test"]').prop('checked', false);
 	} else if (value == "pass") {
 		$('.' + this.id + ' [name="test' + number + '"]').eq(0).prop('checked', true); //0 = Pass.

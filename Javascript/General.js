@@ -176,7 +176,7 @@ InputForm.prototype.restoreDivs = function(elements) {
 	});
 }
 
-InputForm.prototype.generateId = function () {
+InputForm.prototype.generateID = function () {
 	var rand = Math.random()*(10000-1000) + 1000;
 	rand = Math.floor(rand);
 	return rand;
@@ -189,9 +189,22 @@ InputForm.prototype.generateElement = function (elementId) {
 	} else {
 		var elementDiv = $('#' + this.id + 'Div');
 		if(elementDiv.length == 0) { //there is not an element div 
-			elementDiv = $('<div/>', {id: this.id + "Div", class: this.id, style: "display:​ none;​"}).appendTo('#dashboard');
+			elementDiv = $('<div/>', {id: this.id + "Div", class: this.id, style: "display:​ none; width: 0px; height: 0px; overflow: hidden;​"}).appendTo('#dashboard');
 		}
 		return $('<div/>', {id: this.id + elementId}).appendTo(elementDiv);
+	}
+}
+
+InputForm.prototype.generateInput = function (elementId) {
+	var element = $('#' + this.id + elementId);
+	if(element.length > 0) {
+		return element;
+	} else {
+		var elementDiv = $('#' + this.id + 'Div');
+		if(elementDiv.length == 0) { //there is not an element div 
+			elementDiv = $('<div/>', {id: this.id + "Div", class: this.id, style: "display:​ none; width: 0px; height: 0px; overflow: hidden;​"}).appendTo('#dashboard');
+		}
+		return $('<input/>', {id: this.id + elementId, type: "text", value: ""}).appendTo(elementDiv);
 	}
 }
 

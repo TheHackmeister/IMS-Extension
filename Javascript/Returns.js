@@ -14,48 +14,64 @@ var reorganizeReturns = function () {
 	//This moves around the elements.
 	$('h6:contains(Location Key)').insertBefore('h6:contains(Asset ID)');
 	$('#addReturnlineLocation').insertBefore('h6:contains(Asset ID)');
-	$('<input type="text" id="addReturnLocation" rows="15">').insertBefore('h6:contains(Asset ID)');
+	$('<input type="text" id="addReturnLocation">').insertBefore('h6:contains(Asset ID)');
 	$('<textarea id="addReturnTextarea" rows="15">').insertAfter('#addReturnlineAssetTag');
-	$('#addOrderLineResult').id("addReturnResult");
+	$('#addOrderLineResult').attr("id", "addReturnResult");
 	$('#addReturnlineAssetTag').hide();
 	$('#addReturnlineLocation').hide();
 
 	//Removes onclick. 	
 	$('[value="add asset"]').attr("onclick", ""); 
-	
 	var returnForm = new ReturnForm("addReturn");
-	
-	//Event Listener
-	$('[value="add asset"]').on('click', $.proxy(function (event){
-		this.setReturnResults("");
-		this.prepare();
-	},returnForm));
+}
+
+//loadDetail is broken as of 3/10/14 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
+var loadDetailOld = loadDetail;
+var loadDetail = function() {
+	var returnID = $('#returnID').val() || false;
+	if(returnID) {
+		ajaxCallback(function(){loadReturnDetail(returnID);});
+	} else {
+		loadDetailOld.apply(this, arguments);
+	}	
 }
 
 var ReturnForm = function (id) {
-	this.listLocation = generateElement("addReturnLocation");
-	this.listOfReturns = generateElement("addReturnTextarea");
-	this.currentAsset = generateElement("addReturnlineAssetTag");
-	this.currentLocation = generateElement("addReturnlineLocation");
-	this.results = generateElement("addReturnResult");
+	this.id = id || this.generateID();
+	this.listLocation = this.generateElement("Location");
+	this.listOfReturns = this.generateElement("Textarea");
+	this.currentAsset = this.generateElement("lineAssetTag");
+	this.currentLocation = this.generateElement("lineLocation");
+	this.results = this.generateElement("Result");
 	
-	this.asset = new AssetController();
+	this.asset = new AssetController(id);
 	
 	//Events
 	this.event = this.asset.event;
+
+	//I unbind and bind to avoid duplicate bindings. A different approach would be to bind to the body and use a more specific targetter. 
+	$('[value="add asset"]').off('click').on('click', $.proxy(function (event){
+		this.setReturnResults("");
+		var id = this.prepare();
+		this.asset.load(id);
+	},this));
+	
 	this.event.on('loaded', $.proxy(function(){
+		console.log("Loaded");
 		this.asset.setTest("resetAll");
 		this.asset.save();
 	}, this));
 	
 	this.event.on('saved', $.proxy(function(){
+		console.log("Saved");
 		this.returnAsset();
 	}, this));
 	
 	this.event.on('returned', $.proxy(function(){
+		console.log("Returned");
 // I have reservations about the way getAssetId works which I need to address.
 // I think it should be ok.
-		var id = this.prepare(this.asset.getAssetId());
+		var id = this.prepare(this.asset.getAssetID());
 		this.asset.load(id);
 	}, this));
 }
@@ -80,10 +96,10 @@ ReturnForm.prototype.setReturnResults = function (text) {
 	this.results.html(text);
 }
 
-
 ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
 	if(this.results.html().length > 1) {//If there is an error. 
-//Should have error text here.
+		this.error = ["Please re-enter the location."]
+		this.event.trigger('error');
 		return false;
 	} else {
 		var oldA = oldAsset || false;
@@ -96,6 +112,9 @@ ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
 	
 	if(this.listOfReturns.val().length == 0) {
 		//This reloads the page so you can view the items just inputted. It may make more sense to not refresh the page. 
+		this.asset.clearDiv();
+//This has to be here... But I don't understand why. I wonder if it has to do with an event? 
+		this.asset.asset.remove(); 
 		loadReturnDetail(this.getReturnId());
 		return false;
 	}
@@ -103,18 +122,7 @@ ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
 	//Gets the first line of the text area.
 	var array = this.listOfReturns.val().split("\n");
 	this.currentAsset.val(array[0]);
-	this.currentLocation.val(listLocation.val());
+	this.currentLocation.val(this.listLocation.val());
 	return array[0];
 }
 
-
-//loadDetail is broken as of 3/10 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
-var loadDetailOld = loadDetail;
-var loadDetail = function() {
-	var returnID = $('#returnID').val() || false;
-	if(returnID) {
-		ajaxCallback(function(){loadReturnDetail(returnID);});
-	} else {
-		loadDetailOld.apply(this, arguments);
-	}	
-}
