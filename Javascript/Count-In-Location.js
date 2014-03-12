@@ -6,8 +6,7 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
-
-function findAndRemove(array,string)  {
+var findAndRemove = function (array,string)  {
 	for(var i = 0; i < array.length; i++) {
 		if(array[i][0] == string ) {
 			array.remove(i);
@@ -17,42 +16,46 @@ function findAndRemove(array,string)  {
 	}
 	return array;
 }
+
+//Have to preface $ calls with this to get the correct window.
+var countInLocation = function () {
 	var product;
 	var productArray = new Array();//[index][text|number]
 
-	$('.line').each(function(i, obj) {
-	product = $(this).find(".item:eq(1)").html();
-	
-	if(i == 1) {
-		var newProduct = new Array();
-		newProduct[0] = product;
-		newProduct[1] = 1;
-		productArray.push(newProduct);
-	}
-	
-	var found = false;
-	
-	productArray.forEach(function(i2) {
-		if(product == i2[0]) {
-			i2[1] += 1;
-			found = true;
-		} 
+	this.$('.line').each(function(i, obj) {
+		product = $(this).find(".item:eq(1)").html();
+		
+		if(i == 1) {
+			var newProduct = new Array();
+			newProduct[0] = product;
+			newProduct[1] = 1;
+			productArray.push(newProduct);
+		}
+		
+		var found = false;
+		
+		productArray.forEach(function(i2) {
+			if(product == i2[0]) {
+				i2[1] += 1;
+				found = true;
+			} 
+		});
+		if(found != true) {
+			var newProduct = new Array();
+			newProduct[0] = product;
+			newProduct[1] = 1;
+			productArray.push(newProduct);
+		}
 	});
-	if(found != true) {
-		var newProduct = new Array();
-		newProduct[0] = product;
-		newProduct[1] = 1;
-		productArray.push(newProduct);
-	}
-});
-	
-productArray = findAndRemove(productArray,"DESC");
-productArray = findAndRemove(productArray,null);
-productArray.sort();
+		
+	productArray = findAndRemove(productArray,"DESC");
+	productArray = findAndRemove(productArray,null);
+	productArray.sort();
 
-var arrayS = "";
+	var arrayS = "";
 
-productArray.forEach(function(i2) {
-	arrayS += i2[0] + ":" + i2[1] + "<br>\n";
-});
-$("<div>" + arrayS + "</div>").insertAfter('#assetCountWrapper')
+	productArray.forEach(function(i2) {
+		arrayS += i2[1] + " : " + i2[0] + "<br>\n";
+	});
+	this.$("<div>" + arrayS + "</div>").insertAfter('#assetCountWrapper')
+}

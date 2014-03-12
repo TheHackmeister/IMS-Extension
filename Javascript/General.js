@@ -69,7 +69,20 @@ function newWindow(string, file, plugin){
 			wnd.document.title = 'Print Ready';
 			wnd.printWindow();
 		}
+	} else if (file == 'assetcountbylocationshortprocess.php') {
+		wnd.document.close();
+		wnd.Array.prototype.remove = Array.prototype.remove;
+		wnd.findAndRemove = findAndRemove;
+		wnd.countInLocation = countInLocation;
+
+		wnd.onload = function () {
+			wnd.countInLocation();
+		}
 	}
+}
+	
+var test = function () {
+	this.alert("HI");
 }
 	
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.

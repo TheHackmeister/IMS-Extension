@@ -11,8 +11,6 @@ ToDo:
 	Create Options Window.
 		Integrate Shipping JS. 
 	
-	Integrate count In Location
-	Integrate Print modification.
 	Purchase Google Developer access. 	
 	Create Ultimate transfer. 
 	Integrate boxing.
@@ -24,7 +22,7 @@ Things this fixes:
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
 		Unsets condition after return.
-
+		
 Things this modifies:
 	showLoading
 	hideLoading
@@ -43,7 +41,7 @@ Things this modifies:
 		Does not override, but I do use my own version to load assets. It removes the breadcrum notification. 
 
 Things this overloads:
-	newWindow (Could do this without overloading with extension.)
+	newWindow (For shortreports and for printing asset tags)
 	
 Things that are broken in this addon:
 
