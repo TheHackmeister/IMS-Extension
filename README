@@ -1,6 +1,9 @@
 ToDo:
 	Give Asset some kind of error checking.
 	
+	Create Options Window.
+		Integrate Shipping JS.
+	
 	Integrate a version of HD testing.
 		Save and new number focus and select ID field.
 		Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
@@ -8,9 +11,8 @@ ToDo:
 			Should have specific type
 			Should have specific tests/condition
 			Should have specific specs
-	Create Options Window.
-		Integrate Shipping JS. 
-	
+ 
+	Figure out how to do MD5 hash or something on function and compare to my functions. Then it can alert me when Brad changes important things.
 	Purchase Google Developer access. 	
 	Create Ultimate transfer. 
 	Integrate boxing.
