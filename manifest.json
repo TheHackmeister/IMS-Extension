@@ -1,45 +1,19 @@
 {
-  // Required
   "manifest_version": 2,
   "name": "IMS Improved",
-  "version": "1.0.0.0",
-
-  // Recommended
-  //"default_locale": "en",
+  "short name": "IMS Improved",
+  "version": "0.2.0.0",
+  "author": "Spencer Hachmeister",	
   "description": "Makes improvements to IMS",
-  //"icons": {...},
 
-  // Pick one (or none)
- // "browser_action": {...},
- // "page_action": {...},
-
-  // Optional
-  "author": "Spencer Hachmeister",
- // "background": {
-    // Recommended
- //   "persistent": false
- // },
- // "background_page": ...,
- // "chrome_url_overrides": {...},
- // "commands": {
- //   "global": ...
- // },
-    "content_scripts": [
+  "web_accessible_resources": [
+    "Javascript/*.js"
+  ], 
+ "content_scripts": [
     {
       "matches": ["http://63.253.103.78/ims-responsive/dashboard.php*"],
 	  "run_at": "document_idle",
       "js": ["jsLoader.js"]
     }
-  ],
- // "file_browser_handlers": [...],
- // "homepage_url": "http://path/to/homepage",
- // "options_page": "aFile.html",
-  //"page_actions": ...,
- 
-  "short_name": "Short Name",
-  //"update_url": "http://path/to/updateInfo.xml"
-  "web_accessible_resources": [
-    "Javascript/*.js"
   ]
-
 }

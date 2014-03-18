@@ -1,5 +1,7 @@
 ToDo:
 	Give Asset some kind of error checking.
+	Create visual feedback for loading. 
+	Update version
 	
 	Create Options Window.
 		Integrate Shipping JS.
