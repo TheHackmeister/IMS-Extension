@@ -9,6 +9,12 @@ addToPage("Javascript\\General.js");
 addToPage("Javascript\\Assets.js");
 addToPage("Javascript\\Returns.js");
 addToPage("Javascript\\Count-In-Location.js");
+
+chrome.storage.sync.get("SautoAddToSO", function (retVal) {
+    if(retVal.SautoAddToSO == true) {
+		addToPage("Javascript\\Shipping.js");		
+	}
+});
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");

@@ -4,7 +4,8 @@
   "version": "0.2.0.0",
   "author": "Spencer Hachmeister",	
   "description": "Makes improvements to IMS",
-
+  "permissions": ["storage"],
+   "options_page": "options.html",
   "web_accessible_resources": [
     "Javascript/*.js"
   ], 

@@ -4,6 +4,8 @@ ToDo:
 	
 	Create Options Window.
 		Integrate Shipping JS.
+		Add Option to not unset condition on returns.
+	
 	
 	Integrate a version of HD testing.
 		Save and new number focus and select ID field.
@@ -19,7 +21,7 @@ ToDo:
 	Add by SN to Return.
 	
 Things this fixes:
-	Clicks single PO
+	Automatically selects PO
 	Better return page
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
