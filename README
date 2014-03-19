@@ -1,6 +1,5 @@
 ToDo:
 	Give Asset some kind of error checking.
-	Create visual feedback for loading. 
 	Update version
 	
 	Create Options Window.
@@ -14,8 +13,7 @@ ToDo:
 			Should have specific tests/condition
 			Should have specific specs
  
-	Figure out how to do MD5 hash or something on function and compare to my functions. Then it can alert me when Brad changes important things.
-	Purchase Google Developer access. 	
+	Figure out how to do MD5 hash or something on function and compare to my functions. Then it can alert me when Brad changes important things.	
 	Create Ultimate transfer. 
 	Integrate boxing.
 	Add by SN to Return.
@@ -26,6 +24,7 @@ Things this fixes:
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
 		Unsets condition after return.
+	Gives visual feedback for when page is loading.
 		
 Things this modifies:
 	showLoading

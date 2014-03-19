@@ -1,7 +1,6 @@
 {
   "manifest_version": 2,
   "name": "IMS Improved",
-  "short name": "IMS Improved",
   "version": "0.2.0.0",
   "author": "Spencer Hachmeister",	
   "description": "Makes improvements to IMS",
@@ -13,6 +12,7 @@
     {
       "matches": ["http://63.253.103.78/ims-responsive/dashboard.php*"],
 	  "run_at": "document_idle",
+	  "css": ["loadingPage.css"],
       "js": ["jsLoader.js"]
     }
   ]
