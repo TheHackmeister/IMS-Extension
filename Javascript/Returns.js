@@ -25,17 +25,6 @@ var reorganizeReturns = function () {
 	var returnForm = new ReturnForm("addReturn");
 }
 
-//loadDetail is broken as of 3/10/14 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
-var loadDetailOld = loadDetail;
-var loadDetail = function() {
-	var returnID = $('#returnID').val() || false;
-	if(returnID) {
-		ajaxCallback(function(){loadReturnDetail(returnID);});
-	} else {
-		loadDetailOld.apply(this, arguments);
-	}	
-}
-
 var ReturnForm = function (id) {
 	this.id = id || this.generateID();
 	this.listLocation = this.generateElement("Location");

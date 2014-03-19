@@ -1,12 +1,10 @@
 ToDo:
+	Use option to not unset condition on returns.
+	Add product to Return - Can't. No command :( Remove div?
+	Investigate how product added to a SO/Return is counted in inventory. (SO it isn't effected. Maybe it has to be marked as shipped?)
+
+	
 	Give Asset some kind of error checking.
-	Update version
-	
-	Create Options Window.
-		Integrate Shipping JS.
-		Add Option to not unset condition on returns.
-	
-	
 	Integrate a version of HD testing.
 		Save and new number focus and select ID field.
 		Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
@@ -27,6 +25,7 @@ Things this fixes:
 		Clicking on the X removes item and reloads return order
 		Unsets condition after return.
 	Gives visual feedback for when page is loading.
+	Allows adding of product to sales order.
 		
 Things this modifies:
 	showLoading
@@ -40,11 +39,17 @@ Things this modifies:
 		Sets focus to product line
 	loadReturnDetail
 		Reorganizes the Returns page
+	loadSalesOrderDetail
+		Reorganizes the SO page
+	addSalesOrderLineProduct
+		Had to do some juggling of IDs. It happens here. 
 	loadDetail 
 		If in Return, runs the loadReturnDetail instead. 
+		If in SO, it runs the viewSODetailList command instead. It is set to do it as a container. Can change.
 	selectAsset
 		Does not override, but I do use my own version to load assets. It removes the breadcrum notification. 
 
+		
 Things this overloads:
 	newWindow (For shortreports and for printing asset tags)
 	
@@ -52,6 +57,7 @@ Things that are broken in this addon:
 
 Things that are broken in IMS:
 	Adding product to a return. 
-	Adding product to a SO.
+	Adding product to a SO. I have implemented a fix.
 	Saving a return does nothing.
 	Returns don't update the Managed Transfer list. 
+	

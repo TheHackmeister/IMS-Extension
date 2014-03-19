@@ -132,6 +132,20 @@ var saveAssetListener = function (asset,id) {
 }
 
 
+//loadDetail is broken as of 3/10/14 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
+var loadDetailOld = loadDetail;
+var loadDetail = function() {
+	var returnID = $('#returnID').val() || false;
+	var soID = $('#sorderID').val() || false;
+	if(returnID) {
+		ajaxCallback(function(){loadReturnDetail(returnID);});
+	} else if (soID) {
+		ajaxCallback(function(){viewSODetailList(soID, 'viewsalesorderdetailcontainer.php');});
+	} else {
+		loadDetailOld.apply(this, arguments);
+	}	
+}
+
 
 ///////////////
 //Adds features
