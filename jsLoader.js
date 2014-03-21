@@ -16,6 +16,12 @@ chrome.storage.sync.get("SautoAddToSO", function (retVal) {
 		addToPage("Javascript\\Shipping.js");		
 	}
 });
+
+chrome.storage.sync.get("SunsetReturns", function (retVal) {
+    if(retVal.SunsetReturns == false) {
+		addToPage("Javascript\\Return-Option.js");		
+	}
+});
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");

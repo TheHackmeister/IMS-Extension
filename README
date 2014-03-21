@@ -1,4 +1,5 @@
 ToDo:
+	Fix the option. Return-Option isn't running? I don't know what's going on.
 	Use option to not unset condition on returns.
 	Add product to Return - Can't. No command :( Remove div?
 	Investigate how product added to a SO/Return is counted in inventory. (SO it isn't effected. Maybe it has to be marked as shipped?)
@@ -59,5 +60,6 @@ Things that are broken in IMS:
 	Adding product to a return. 
 	Adding product to a SO. I have implemented a fix.
 	Saving a return does nothing.
+	
 	Returns don't update the Managed Transfer list. 
 	

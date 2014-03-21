@@ -41,8 +41,7 @@ var ReturnForm = function (id) {
 	//I unbind and bind to avoid duplicate bindings. A different approach would be to bind to the body and use a more specific targetter. 
 	$('[value="add asset"]').off('click').on('click', $.proxy(function (event){
 		this.setReturnResults("");
-		var id = this.prepare();
-		this.asset.load(id);
+		this.processAsset();
 	},this));
 	
 	this.event.on('loaded', $.proxy(function(){
@@ -51,7 +50,8 @@ var ReturnForm = function (id) {
 		this.asset.save();
 	}, this));
 	
-	this.event.on('saved', $.proxy(function(){
+	//I have two events, one to handle when an asset is being modified, and one when it is not.
+	this.event.on('saved prepared', $.proxy(function(){
 		console.log("Saved");
 		this.returnAsset();
 	}, this));
@@ -60,8 +60,7 @@ var ReturnForm = function (id) {
 		console.log("Returned");
 // I have reservations about the way getAssetId works which I need to address.
 // I think it should be ok.
-		var id = this.prepare(this.asset.getAssetID());
-		this.asset.load(id);
+		this.processAsset(this.asset.getAssetID());
 	}, this));
 }
 ReturnForm.prototype = Object.create(InputForm.prototype);
@@ -113,5 +112,11 @@ ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
 	this.currentAsset.val(array[0]);
 	this.currentLocation.val(this.listLocation.val());
 	return array[0];
+}
+
+//This gets overriden if the option to not unset asset conditions is set. 
+ReturnForm.prototype.processAsset = function (oldID) {	
+	var id = this.prepare(oldID);
+	this.asset.load(id);
 }
 
