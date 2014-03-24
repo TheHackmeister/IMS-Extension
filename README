@@ -1,9 +1,8 @@
 ToDo:
-	Fix the option. Return-Option isn't running? I don't know what's going on.
-	Use option to not unset condition on returns.
 	Add product to Return - Can't. No command :( Remove div?
 	Investigate how product added to a SO/Return is counted in inventory. (SO it isn't effected. Maybe it has to be marked as shipped?)
-
+	Make return events have a permanent listener.
+	Have auto select PO work for returns and SO too.
 	
 	Give Asset some kind of error checking.
 	Integrate a version of HD testing.

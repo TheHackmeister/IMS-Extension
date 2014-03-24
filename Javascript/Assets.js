@@ -31,7 +31,7 @@ AssetController.prototype.load = function (id) {
 	}
 	var changedElements = this.changeDivs(this.editAssetDiv, "editAssetForm"); 
 	ajaxCallback.call(this,function(){this.loadCallback(changedElements, id);});
-	//selectAsset(id); //New code forces me to use my own version. Mine simply removes the breadcrum call.
+	//selectAsset(id); //New code forces me to use my own version. Mine simply removes the breadcrumb call.
 	this.selectAsset(id);
 }
 

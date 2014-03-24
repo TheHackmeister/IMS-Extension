@@ -32,45 +32,34 @@ var ReturnForm = function (id) {
 	this.currentAsset = this.generateElement("lineAssetTag");
 	this.currentLocation = this.generateElement("lineLocation");
 	this.results = this.generateElement("Result");
+	this.returnArray = new Array();
 	
 	this.asset = new AssetController(id);
 	
 	//Events
 	this.event = this.asset.event;
-
 	//I unbind and bind to avoid duplicate bindings. A different approach would be to bind to the body and use a more specific targetter. 
 	$('[value="add asset"]').off('click').on('click', $.proxy(function (event){
-		debugger;
-		console.log("Clicked");
-		this.setReturnResults("");
-		this.processAsset();
+		this.setupReturnArrayAndStart();
 	},this));
 	
 	this.event.on('loaded', $.proxy(function(){
-		debugger;
-		console.log("Loaded");
 		this.asset.setTest("resetAll");
 		this.asset.save();
 	}, this));
 	
 	//I have two events, one to handle when an asset is being modified, and one when it is not.
-	this.event.on('saved prepared', $.proxy(function(){
-		debugger;
-		console.log("Saved");
+	this.event.on('saved', $.proxy(function(){
 		this.returnAsset();
 	}, this));
 	
 	this.event.on('returned', $.proxy(function(){
-		debugger;
-		console.log("Returned");
-// I have reservations about the way getAssetId works which I need to address.
-// I think it should be ok.
-		this.processAsset(this.asset.getAssetID());
+		this.processNextReturn();
 	}, this));
 }
 ReturnForm.prototype = Object.create(InputForm.prototype);
 
-ReturnForm.prototype.returnAsset = function (id) {
+ReturnForm.prototype.returnAsset = function () {
 	var changedElements = this.changeDivs(this.results, "addOrderLineResult"); 
 	ajaxCallback.call(this,function(){this.returnAssetCallback(changedElements)});
 	addReturnlineAsset(this.getReturnId());
@@ -89,45 +78,42 @@ ReturnForm.prototype.setReturnResults = function (text) {
 	this.results.html(text);
 }
 
-ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
-	debugger;
+ReturnForm.prototype.setupReturnArrayAndStart = function (oldID) {	
+	this.returnArray = this.listOfReturns.val().split("\n");
+	this.processNextReturn(true);
+}
+
+ReturnForm.prototype.processNextReturn = function (firstRun) {
 	if(this.results.html().length > 1) {//If there is an error. 
-		debugger;
 		this.error = ["Please re-enter the location."]
 		this.event.trigger('error');
 		return false;
-	} else {
-		var oldA = oldAsset || false;
-		if (oldA) {
-			//Removes the old asset number.
-			debugger;
-			var re = RegExp(oldA + "(?:\n|)");
-			this.listOfReturns.val(this.listOfReturns.val().replace(re, "")); 
-			debugger;
+	} else if (!firstRun) {
+		//Removes the old asset number.
+		var re = RegExp(this.returnArray[0] + "(?:\n|)");
+		this.listOfReturns.val(this.listOfReturns.val().replace(re, "")); 	
+		this.returnArray.remove(0);
+		while (this.returnArray[0] == "") {
+			this.returnArray.remove(0);
 		}
 	}
-	
-	if(this.listOfReturns.val().length == 0) {
-		debugger;
+	if(this.returnArray.length == 0) {
 		//This reloads the page so you can view the items just inputted. It may make more sense to not refresh the page. 
 		this.asset.clearDiv();
-//This has to be here... But I don't understand why. I wonder if it has to do with an event? 
+		//I need to unbind the events associated with this because loadReturnDetail rebinds them. Removing the div does that.
+//A better option is to make a permanent event listener that is bound to the body. 
 		this.asset.asset.remove(); 
-		//loadReturnDetail(this.getReturnId());
+		loadReturnDetail(this.getReturnId());
 		return false;
-	}
-debugger;
-	//Gets the first line of the text area.
-	var array = this.listOfReturns.val().split("\n");
-	this.currentAsset.val(array[0]);
+	} 
+
+//	console.log(this.returnArray.length);
+	this.currentAsset.val(this.returnArray[0]);
 	this.currentLocation.val(this.listLocation.val());
-	return array[0];
+	this.nextAction(this.returnArray[0]);
 }
 
 //This gets overriden if the option to not unset asset conditions is set. 
-ReturnForm.prototype.processAsset = function (oldID) {	
-	debugger;
-	var id = this.prepare(oldID);
-	this.asset.load(id);
+ReturnForm.prototype.nextAction = function (id) {
+		this.asset.load(id);
 }
-
