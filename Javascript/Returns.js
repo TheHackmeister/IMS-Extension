@@ -101,7 +101,7 @@ ReturnForm.prototype.processNextReturn = function (firstRun) {
 		//This reloads the page so you can view the items just inputted. It may make more sense to not refresh the page. 
 		this.asset.clearDiv();
 		//I need to unbind the events associated with this because loadReturnDetail rebinds them. Removing the div does that.
-//A better option is to make a permanent event listener that is bound to the body. 
+		//There are weaknesses with this approach that prevent something like this being applied to SO. This is because SOs allow you to change the view.
 		this.asset.asset.remove(); 
 		loadReturnDetail(this.getReturnId());
 		return false;
