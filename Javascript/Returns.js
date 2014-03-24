@@ -40,11 +40,14 @@ var ReturnForm = function (id) {
 
 	//I unbind and bind to avoid duplicate bindings. A different approach would be to bind to the body and use a more specific targetter. 
 	$('[value="add asset"]').off('click').on('click', $.proxy(function (event){
+		debugger;
+		console.log("Clicked");
 		this.setReturnResults("");
 		this.processAsset();
 	},this));
 	
 	this.event.on('loaded', $.proxy(function(){
+		debugger;
 		console.log("Loaded");
 		this.asset.setTest("resetAll");
 		this.asset.save();
@@ -52,11 +55,13 @@ var ReturnForm = function (id) {
 	
 	//I have two events, one to handle when an asset is being modified, and one when it is not.
 	this.event.on('saved prepared', $.proxy(function(){
+		debugger;
 		console.log("Saved");
 		this.returnAsset();
 	}, this));
 	
 	this.event.on('returned', $.proxy(function(){
+		debugger;
 		console.log("Returned");
 // I have reservations about the way getAssetId works which I need to address.
 // I think it should be ok.
@@ -85,7 +90,9 @@ ReturnForm.prototype.setReturnResults = function (text) {
 }
 
 ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
+	debugger;
 	if(this.results.html().length > 1) {//If there is an error. 
+		debugger;
 		this.error = ["Please re-enter the location."]
 		this.event.trigger('error');
 		return false;
@@ -93,20 +100,23 @@ ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
 		var oldA = oldAsset || false;
 		if (oldA) {
 			//Removes the old asset number.
+			debugger;
 			var re = RegExp(oldA + "(?:\n|)");
 			this.listOfReturns.val(this.listOfReturns.val().replace(re, "")); 
+			debugger;
 		}
 	}
 	
 	if(this.listOfReturns.val().length == 0) {
+		debugger;
 		//This reloads the page so you can view the items just inputted. It may make more sense to not refresh the page. 
 		this.asset.clearDiv();
 //This has to be here... But I don't understand why. I wonder if it has to do with an event? 
 		this.asset.asset.remove(); 
-		loadReturnDetail(this.getReturnId());
+		//loadReturnDetail(this.getReturnId());
 		return false;
 	}
-
+debugger;
 	//Gets the first line of the text area.
 	var array = this.listOfReturns.val().split("\n");
 	this.currentAsset.val(array[0]);
@@ -116,6 +126,7 @@ ReturnForm.prototype.prepare = function (oldAsset) {// oldAsset
 
 //This gets overriden if the option to not unset asset conditions is set. 
 ReturnForm.prototype.processAsset = function (oldID) {	
+	debugger;
 	var id = this.prepare(oldID);
 	this.asset.load(id);
 }
