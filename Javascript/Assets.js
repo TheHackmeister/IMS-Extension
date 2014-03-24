@@ -13,6 +13,7 @@ var AssetController = function (id) {
 	
 	//Event Handlers 
 	this.event = this.asset;
+
 /*	this.event.on('change', $.proxy(function (){
 		this.load();
 	}, this));
@@ -56,6 +57,15 @@ AssetController.prototype.loadCallback = function (changedElements, id) {
 		this.event.trigger('loaded');
 		return;
 	}
+}
+
+AssetController.prototype.handleError = function (error, id) {
+	alert(error);
+//	var response = confirm(error + "\nWould you like to remove this asset from the list?");
+//	if (response == true) {
+//		this.assets.val(this.assets.val().replace(this.currentAsset.assetID + '\n',''));
+//		this.countAssets();
+//	}
 }
 
 AssetController.prototype.checkLoaded = function (currentID) {

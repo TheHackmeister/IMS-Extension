@@ -1,9 +1,7 @@
 ToDo:
-	Add product to Return - Can't. No command :( Remove div?
-	Investigate how product added to a SO/Return is counted in inventory. (SO it isn't effected. Maybe it has to be marked as shipped?)
-	Have auto select PO work for returns and SO too.
-	
-	Give Asset some kind of error checking.
+	Give Asset(Or Form?) some kind of error checking.
+	Hard Drive page - Pass all and save.
+		
 	Integrate a version of HD testing.
 		Save and new number focus and select ID field.
 		Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
@@ -12,10 +10,13 @@ ToDo:
 			Should have specific tests/condition
 			Should have specific specs
  
+	Fix adding to PO.
+ 
 	Figure out how to do MD5 hash or something on function and compare to my functions. Then it can alert me when Brad changes important things.	
 	Create Ultimate transfer. 
-	Integrate boxing.
-	Add by SN to Return.
+
+ 	Integrate boxing.	
+	Add by SN to Return. 
 	
 Things this fixes:
 	Automatically selects PO
@@ -23,9 +24,11 @@ Things this fixes:
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
 		Unsets condition after return.
+		Because you can't add a product to a return, I removed the add product to return field.
 	Gives visual feedback for when page is loading.
 	Allows adding of product to sales order.
-		
+	Allows submitting information with the enter key rather than clicking the button. 
+	
 Things this modifies:
 	showLoading
 	hideLoading
@@ -46,18 +49,17 @@ Things this modifies:
 		If in Return, runs the loadReturnDetail instead. 
 		If in SO, it runs the viewSODetailList command instead. It is set to do it as a container. Can change.
 	selectAsset
-		Does not override, but I do use my own version to load assets. It removes the breadcrum notification. 
+		Does not override, but I do use my own version to load assets. It removes the breadcrumb notification. 
 
 		
 Things this overloads:
-	newWindow (For shortreports and for printing asset tags)
+	newWindow (For short reports and for printing asset tags)
 	
 Things that are broken in this addon:
 
 Things that are broken in IMS:
-	Adding product to a return. 
+	Adding product to a return. Needs back-end implementation. 
 	Adding product to a SO. I have implemented a fix.
-	Saving a return does nothing.
-	
-	Returns don't update the Managed Transfer list. 
+	Saving a return does nothing. - Back-end.
+	Returns don't update the Managed Transfer list.  Back-end.
 	

@@ -1,5 +1,12 @@
-
 //This stuff improves general IMS functionality	
+
+//Upon enter, these move the focus to a more helpful box.
+$('body').on('change', "#editAssetTransferLocation", function() {$('#editAssetTransferAssets').select();});
+$('body').on('change', "#editAssetTransferEbayAuction", function() {$('#editAssetTransferAssets').select();});
+$('body').on('change', "#editLocationTransferParent", function() {$('#editLocationTransferLocation').select();});
+
+$('body').on('change', "#searchAssetText", function() {$('[value="search"]').click();});
+$('body').on('change', "#searchLocationText", function() {$('[value="search"]').click();});
 
 //This allows me to call something after an AJAX call without overloading another function.
 var ajaxCallback = function (func, ct) {
@@ -159,20 +166,29 @@ Array.prototype.remove = function(from, to) {
   return this.push.apply(this, rest);
 };
 
-//If there is only one PO result found, it is selected.
-function clickTopOption() {
+//If there is only one PO, SO, or Return result found, it is selected.
+function clickTopOption(expectedSearches) {
 	ajaxCallback(function(){
-		if($('.search').length == 1) {
+		if($('.search').length == expectedSearches) {
 			$('.search a').eq(0)[0].click();
 		}	
 	});
 }
 
-// Triggers for selecting PO
+// Triggers for selecting PO, SO, or Return
 $('#dashboardBody').on('keyup', '#searchOrderText', function(e) {
 if(e.keyCode == 10 || e.keyCode == 13) {
-	searchOrder();
-	clickTopOption();
+
+	if($('h5:contains(Edit Exchange/Return)').length > 0) {
+		clickTopOption(1);
+		searchReturn();
+	} else if ($('h5:contains(Edit Sales Order)').length > 0) {
+		clickTopOption(2);
+		searchSalesOrder();
+	} else if ($('h5:contains(Edit Purchase Order)').length > 0) {
+		clickTopOption(2);
+		searchOrder();
+	}
 }
 });
 $('#dashboardBody').on('click', '#editOrderSearch [value="search"]', function(e) {
@@ -239,6 +255,9 @@ InputForm.prototype.triggerEvent = function (event) {
 	this.event.trigger(event);
 }
 
+InputForm.prototype.handleError = function (error) {
+	alert(error);
+}
 
 //Creates an object that makes beep noises. Used for quality control checks later on.
  function SoundAlert() {
@@ -260,3 +279,4 @@ SoundAlert.prototype.play = function (time, freq, callback) {
 			if(typeof(callback) != 'undefined') callback();
 		},time);
 }
+var beep = new SoundAlert();
