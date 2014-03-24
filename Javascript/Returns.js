@@ -19,6 +19,8 @@ var reorganizeReturns = function () {
 	$('#addOrderLineResult').attr("id", "addReturnResult");
 	$('#addReturnlineAssetTag').hide();
 	$('#addReturnlineLocation').hide();
+	$('#exchangeWrapper ul li').eq(1).remove();//The add product div. Can't use so I removed.
+	$('#exchangeWrapper ul li a').eq(0).click();//Might as well expand the add asset div. Or I might not. Easy to change.
 
 	//Removes onclick. 	
 	$('[value="add asset"]').attr("onclick", ""); 
