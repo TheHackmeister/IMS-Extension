@@ -9,7 +9,7 @@ $('<li class="folder root closed"> \
 				</a> \
 			</li> \
 		</ul> \
-	</li>').insertAfter('.folder.root.closed:last');
+	</li>').insertAfter('.leftMenu > .folder.root.closed:last');
 
 
 

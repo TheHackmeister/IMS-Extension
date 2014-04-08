@@ -250,8 +250,8 @@ if(e.keyCode == 10 || e.keyCode == 13) {
 	}
 }
 });
-$('#dashboardBody').on('click', '#editOrderSearch [value="search"]', function(e) {
-	clickTopOption();
+$('#dashboardBody').on('click', '[onclick="searchAsset()"]', function(e) {
+	clickTopOption(1);
 });
 
 
