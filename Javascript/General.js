@@ -5,6 +5,7 @@ $('body').on('change', "#editAssetTransferLocation", function() {$('#editAssetTr
 $('body').on('change', "#editAssetTransferEbayAuction", function() {$('#editAssetTransferAssets').select();});
 $('body').on('change', "#editLocationTransferParent", function() {$('#editLocationTransferLocation').select();});
 
+$('body').on('change', "#searchOrderText", function() {$('[value="search"]').click();});
 $('body').on('change', "#searchAssetText", function() {$('[value="search"]').click();});
 $('body').on('change', "#searchLocationText", function() {$('[value="search"]').click();});
 
@@ -26,11 +27,13 @@ var ajaxCallback = function (func, ct) {
 
 
 //This overloads the loading functions to allow skipping hiding of a loading page. This helps AHK follow what's going on the page better.
+md5Function(showLoading,"showLoading", "e1775ec305172c883c0d0f04c8f420a1");
 var showLoadingOld = showLoading;
 showLoading = function(){
 	document.title = 'IMS (Loading)';
 	showLoadingOld.apply(this,arguments);
 }
+md5Function(hideLoading,"hideLoading","6f168be39aba932e6bd28a27a1249c22");
 var hideLoadingOld = hideLoading;
 hideLoading = function (){
 	if(window.skipHide)
@@ -44,7 +47,8 @@ hideLoading = function (){
 	document.title = 'IMS';
 }
 
-//Overloads the newWindow function. Adds clicking the print button on page load and adds support for Firefox. 
+//Overloads the newWindow function. Adds clicking the print button on page load and adds a more useful count for the short report
+md5Function(newWindow, "newWindow", "f9910d0afe84fac4a58824b891fc8f92");/*
 function newWindow(string, file, plugin){ 
 	var code = '';
 	if(plugin){
@@ -61,7 +65,10 @@ function newWindow(string, file, plugin){
 		type: 'POST',
 		success: function(data) {
 			response = data;
-			eval(code);
+//			eval(code);
+            var wnd = window.open("", "_blank", "location=yes");
+            wnd.document.write(response);
+            $(document).foundation();   
 		},
 		error: function(xhr, status, error) {
 			var err = eval('(' + xhr.responseText + ')');
@@ -87,36 +94,85 @@ function newWindow(string, file, plugin){
 		}
 	}
 }
-	
-var test = function () {
-	this.alert("HI");
-}
-	
+*/
+var newWindow = function (string, file, plugin, print){   
+    var code = '';
+
+    if(plugin){
+        string = string + "&file=" + file + "&plugin="+plugin;
+    }else{
+        string = string + "&file=" + file;
+    }
+
+    var response;
+    $.ajax({
+        url: 'pagehandler.php',
+        data: string,
+        async: false,
+        dataType: "html",
+        type: "POST",
+        success: function(data) {            
+            response = data;
+            //eval(code); 
+            var wnd = window.open("", "_blank", "location=yes");
+            wnd.document.write(response);
+            $(document).foundation();    
+			//Begin add
+			if (plugin == 'assets'){
+				wnd.document.close();
+				wnd.onload = function( ) {
+					wnd.document.title = 'Print Ready';
+					wnd.printWindow();
+				}
+			} else if (file == 'assetcountbylocationshortprocess.php') {
+				wnd.document.close();
+				wnd.Array.prototype.remove = Array.prototype.remove;
+				wnd.findAndRemove = findAndRemove;
+				wnd.countInLocation = countInLocation;
+
+				wnd.onload = function () {
+					wnd.countInLocation();
+				}
+			}			
+			//End add
+        },
+        error: function(xhr, status, error) {
+            var err = eval("(" + xhr.responseText + ")");
+            response = err.Message;
+        }
+    });
+} 
+
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.
-var addOrderLineOld = addOrderLine;
-var addOrderLine = function() {
+md5Function(goods_receipt_addLine, "goods_receipt_addLine", "b715613c9ede8cb4cab0e4370f6bde3e");
+var goods_receipt_addLineOld = goods_receipt_addLine;
+var goods_receipt_addLine = function() {
 	window.skipHide = true;
 	$('#addOrderLineResult').html("");
 	ajaxCallback(addOrderLineListener);
-	addOrderLineOld.apply(this,arguments);
+	goods_receipt_addLineOld.apply(this,arguments);
 }
 var addOrderLineListener = function() {
-	if($('#addOrderLineResult').html() != "") {
+	if($('#addOrderlineResult').eq(0).html() != "") {
 		hideLoading();
 		return;
 	}
 	ajaxCallback(function(){addOrderLineListener2();});
-	$('.printLink')[0].click();
+	$('a:contains(print)')[0].click();
+	$('#orderlineTable a')[0].click();
 };
 var addOrderLineListener2 = function () {
 	$('#editOrderlineExternalAsset').focus().val($('#editOrderlineExternalAsset').val());
 };
 
-function getEditAssetID() {
-	return document.getElementById("editAssetID").value;
+function getEditAssetID(assetDiv) {
+	assetDiv = assetDiv || $(document);
+	
+	return assetDiv.find('#editAssetID').val();
 }
 
 //Automatically locks a PO when saved. Also sets focus to the product description box after save.
+md5Function(saveAsset,"saveAsset", "e30397ccef9924fe928eee9758b52b28");
 var saveAssetOld = saveAsset;
 var saveAsset = function(asset) {
 	var id = "editOrderlineResult" + arguments[0];
@@ -127,7 +183,9 @@ var saveAssetListener = function (asset,id) {
 
 	var handler = function (asset,id) {
 		//If we're not adding to a PO, don't lock condition. 
-		if(!document.getElementById("addAssetDiv")) return;
+		if($('h5:contains(Grading/Receiving)').length < 1) return;
+		
+		scrollWindow("fourth");
 		
 		saveAssetCondition(asset);		
         $('#addAssetProductSearchText').focus();    
@@ -137,22 +195,23 @@ var saveAssetListener = function (asset,id) {
 	}.bind(this, asset, id);
 	return handler;
 }
-
-
+/*
+//loadReturnDetail has been fixed.
 //loadDetail is broken as of 3/10/14 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
 var loadDetailOld = loadDetail;
 var loadDetail = function() {
-	var returnID = $('#returnID').val() || false;
+//	var returnID = $('#returnID').val() || false;
 	var soID = $('#sorderID').val() || false;
-	if(returnID) {
-		ajaxCallback(function(){loadReturnDetail(returnID);});
-	} else if (soID) {
+//	if(returnID) {
+//		ajaxCallback(function(){loadReturnDetail(returnID);});
+//	} else 
+	if (soID) {
 		ajaxCallback(function(){viewSODetailList(soID, 'viewsalesorderdetailcontainer.php');});
 	} else {
 		loadDetailOld.apply(this, arguments);
 	}	
 }
-
+*/
 
 ///////////////
 //Adds features
@@ -185,7 +244,7 @@ if(e.keyCode == 10 || e.keyCode == 13) {
 	} else if ($('h5:contains(Edit Sales Order)').length > 0) {
 		clickTopOption(2);
 		searchSalesOrder();
-	} else if ($('h5:contains(Edit Purchase Order)').length > 0) {
+	} else if ($('h5:contains(Edit Goods Receipt)').length > 0) {
 		clickTopOption(2);
 		searchOrder();
 	}

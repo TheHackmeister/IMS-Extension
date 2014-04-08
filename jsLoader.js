@@ -4,12 +4,22 @@ var addToPage = function (loc) {
 	(document.head||document.documentElement).appendChild(s);
 }
 
+addToPage("Javascript\\md5.js");
+
+
 addToPage("Javascript\\SetupIMS.js");
 addToPage("Javascript\\General.js");
 addToPage("Javascript\\Assets.js");
 addToPage("Javascript\\Returns.js");
 addToPage("Javascript\\SalesOrder.js");
 addToPage("Javascript\\Count-In-Location.js");
+addToPage("Javascript\\HD-Page.js");
+addToPage("Javascript\\Build.js");
+//addToPage("Javascript\\Boxing-CreateLoc.js");
+//addToPage("Javascript\\Boxing-CurrentBox.js");
+//addToPage("Javascript\\Boxing-CurrentLoc.js");
+//addToPage("Javascript\\Boxing-Init.js");
+
 
 chrome.storage.sync.get("SautoAddToSO", function (retVal) {
     if(retVal.SautoAddToSO == true) {

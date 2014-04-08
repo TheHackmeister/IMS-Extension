@@ -13,16 +13,27 @@ var AssetController = function (id) {
 	
 	//Event Handlers 
 	this.event = this.asset;
-
-/*	this.event.on('change', $.proxy(function (){
+/*
+	this.event.on('change', $.proxy(function (){
 		this.load();
 	}, this));
 */
 }
 AssetController.prototype = Object.create(InputForm.prototype);
 
+md5Function(selectAsset,"selectAsset", "995cb46a96ac21138a7d30edee17bd7f");
+AssetController.prototype.selectAsset = function (id) {
+    var string = "ID="+id
+    var file = 'selectasset.php';
+
+	ajax(string, file, function(response){
+    	document.getElementById("editAssetForm").innerHTML = response;
+    	//showBreadcrumbNavIcon('edit', 'third');
+    }, 'assets');
+}
+
 AssetController.prototype.load = function (id) {
-	if(typeof(id) == 'undefined') {
+	if(typeof(id) == 'undefined' || typeof(id) == 'object') {
 		var id = this.getAssetID(id); 
 	} else {
 		this.setAssetID(id);
@@ -36,18 +47,9 @@ AssetController.prototype.load = function (id) {
 	this.selectAsset(id);
 }
 
-AssetController.prototype.selectAsset = function (id) {
-    var string = "ID="+id
-    var file = 'selectasset.php';
-
-	ajax(string, file, function(response){
-    	document.getElementById("editAssetForm").innerHTML = response;
-    	//showBreadcrumbNavIcon('edit', 'third');
-    }, 'assets');
-}
-
 AssetController.prototype.loadCallback = function (changedElements, id) {
 	this.restoreDivs(changedElements);
+	this.select();
 	if(!this.checkLoaded(id)) {
 //Maybe have it set event of error, and an error object. When error occurs, event handler catches it and presents what is in the error object.
 		this.error = ["The item with the ID of " + id + " doesn't exist or has been deleted.", id];
@@ -57,6 +59,10 @@ AssetController.prototype.loadCallback = function (changedElements, id) {
 		this.event.trigger('loaded');
 		return;
 	}
+}
+
+AssetController.prototype.select = function () {
+
 }
 
 AssetController.prototype.handleError = function (error, id) {
@@ -93,6 +99,8 @@ AssetController.prototype.save = function () {
 }
 
 AssetController.prototype.saveCallback = function () {
+	this.select();
+	console.log("Saved");
 	this.event.trigger('saved');
 }
 

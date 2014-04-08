@@ -1,8 +1,15 @@
 /*
-loadForm('editsalesorder.php','','so');
+ loadForm('editsalesorder.php', '', 'sales_order');
 transferReport();
 */
+md5Function(deleteSalesOrderline, "deleteSalesOrderline", "bc96f328b1d333e1d3a67bd6c54d0106");
+var deleteSalesOrderlineOld = deleteSalesOrderline;
+var deleteSalesOrderline = function (line, id, e) {
+	e = e || $('[onclick="deleteSalesOrderline(\'140398\', \'739\')"]');
+	deleteSalesOrderlineOld(line,id,e);
+}
 
+/* Brad has fixed.
 // Reorganizes the returns once the load return button is pressed. 
 var loadSalesOrderDetailOld = loadSalesOrderDetail;
 var loadSalesOrderDetail = function () {
@@ -29,6 +36,6 @@ var addSalesOrderLineProduct = function (id) {
 		$('#productText').attr("id","addAssetProductSearchText");
 	});
 }
-
+*/
 
 

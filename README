@@ -1,65 +1,100 @@
 ToDo:
-	Give Asset(Or Form?) some kind of error checking.
-	Hard Drive page - Pass all and save.
-		
-	Integrate a version of HD testing.
-		Save and new number focus and select ID field.
-		Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
-			Should have in title
-			Should have specific type
-			Should have specific tests/condition
-			Should have specific specs
- 
-	Fix adding to PO.
- 
-	Figure out how to do MD5 hash or something on function and compare to my functions. Then it can alert me when Brad changes important things.	
-	Create Ultimate transfer. 
+	High Priority
 
- 	Integrate boxing.	
-	Add by SN to Return. 
+	
+	Medium Priority
+		Give Asset(Or Form?) some kind of error checking.
+		Integrate a version of HD testing.
+			Save and new number focus and select ID field.
+			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
+		Make returns not change page. Add response to page, and remove in the same way so does.
+		
+	Low Priority
+		Add event listener to location in PO. Also do so on selecting 0f product. 
+		If number is product, just do that product.
+			
+	Back burner
+		Create Ultimate transfer. 	
+		Hard Drive page - Pass all and save.
+		Boxing page
+		Check on location transfer. No asset should have more than 4 digits. 	
+		Add by SN to Return. 
 	
 Things this fixes:
 	Automatically selects PO
-	Better return page
+	Deleting an asset from a SO
+	*Better return page
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
 		Unsets condition after return.
-		Because you can't add a product to a return, I removed the add product to return field.
+		*Because you can't add a product to a return, I removed the add product to return field.
+		*Add Product to Return
+		*Enter on return location should move to asset tags.
 	Gives visual feedback for when page is loading.
-	Allows adding of product to sales order.
+	-Allows adding of product to sales order.
 	Allows submitting information with the enter key rather than clicking the button. 
+	Allows better flow for adding product to a PO
+		Automatically prints tag and loads new asset when adding to PO
+		Save automatically locks the condition and focuses the product field. 
+	Alerts me when Brad changes function calls.
 	
 Things this modifies:
 	showLoading
 	hideLoading
-	addOrderLine
-		Clears results
-		Clicks print
-		Sets focus to External Asset
+	*addOrderLine
+		*Clears results
+		*Clicks print
+		*Sets focus to External Asset
 	saveAsset
 		Locks the condition
 		Sets focus to product line
 	loadReturnDetail
 		Reorganizes the Returns page
-	loadSalesOrderDetail
-		Reorganizes the SO page
-	addSalesOrderLineProduct
-		Had to do some juggling of IDs. It happens here. 
+	deleteSalesOrderline 
+		Brads code requires the calling element, but does not include it on the page. This finds that element and includes it in the call. 
+//	loadSalesOrderDetail
+//		Reorganizes the SO page
+//	*addSalesOrderLineProduct
+//		*Had to do some juggling of IDs. It happens here. 
 	loadDetail 
 		If in Return, runs the loadReturnDetail instead. 
-		If in SO, it runs the viewSODetailList command instead. It is set to do it as a container. Can change.
-	selectAsset
-		Does not override, but I do use my own version to load assets. It removes the breadcrumb notification. 
+		-If in SO, it runs the viewSODetailList command instead. It is set to do it as a container. Can change.
+	*selectAsset
+		*Does not override, but I do use my own version to load assets. It removes the breadcrumb notification. 
 
 		
 Things this overloads:
 	newWindow (For short reports and for printing asset tags)
 	
 Things that are broken in this addon:
-
+	*Returns
+	
 Things that are broken in IMS:
-	Adding product to a return. Needs back-end implementation. 
 	Adding product to a SO. I have implemented a fix.
+	Adding product to a return. Needs back-end implementation. 
 	Saving a return does nothing. - Back-end.
 	Returns don't update the Managed Transfer list.  Back-end.
 	
+
+	
+	
+	
+	
+Short report gives number of each product type
+Navigation
+	Transfer Boxes
+	Auto selects PO, SO, Returns
+	Allows submitting information with the enter key rather than clicking the button. 
+Allows adding of product to sales order.
+	loadForm('editsalesorder.php','','so');
+Better return page
+	loadForm('editreturn.php','','returns');
+	More normal transfer boxes
+	Clicking on the X removes item and reloads return order
+	Unsets condition after return.
+	Because you can't add a product to a return, I removed the add product to return field.
+Gives visual feedback for when page is loading.
+
+Printing works better
+Has shipping option to automatically add to SO.
+		

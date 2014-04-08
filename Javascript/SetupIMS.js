@@ -1,8 +1,10 @@
 	//Stops backspace from going back. Needed because AHK removes shortcut text with a backspace.
 	window.addEventListener('keydown',function(e){if(e.keyIdentifier=='U+0008'||e.keyIdentifier=='Backspace'){if(e.target==document.body||e.target.type=="radio"){ e.preventDefault();}}},true);
+	
+	//Brad has fixed.
 	//Needed, otherwise ajax calls a non existent function and raises an error.
-	$.prototype.chosen = function (){return "Bad";};
-	String.prototype.change = function(){};
+	//$.prototype.chosen = function (){return "Bad";};
+	//String.prototype.change = function(){};
 	
 	var CDiv = document.createElement('div');
 	var txtarea = document.createElement('textarea');
