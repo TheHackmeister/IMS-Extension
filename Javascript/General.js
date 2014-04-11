@@ -190,9 +190,36 @@ var addOrderLineListener2 = function () {
 
 function getEditAssetID(assetDiv) {
 	assetDiv = assetDiv || $(document);
-	
 	return assetDiv.find('#editAssetID').val();
 }
+
+md5Function(checkExternalCondition,"checkExternalCondition", "f4739f3f1a07bb86bc8f466ed2559ad6");
+var checkExternalCondition = function (external, asset){
+    var string = 'external='+external+"&asset="+asset;
+    var file = 'checkexternalcondition.php';
+
+    ajax(string, file, function(response){
+        
+        var externalCondition = $('#editOrderlineExternalCondition'+asset);     
+        if (response == 'no match'){
+            $(externalCondition).addClass('alert');
+            $('#editOrderlineExternalCondition'+asset).val('');
+            $('#editOrderlineExternalConditionDetail'+asset).val('');
+        }else{
+        	$values = response.split(":");
+
+        	if($values[0] == 'pass'){
+	        	$(externalCondition).removeClass('alert');
+        	}else{
+	        	$(externalCondition).addClass('alert');
+        	}            
+                          
+            $('#editOrderlineExternalCondition'+asset).val($values[1]);
+            $('#editOrderlineExternalConditionDetail'+asset).val($values[2]);
+			checkEAN();
+        }
+    }, 'assets');
+} 
 
 //Automatically locks a PO when saved. Also sets focus to the product description box after save.
 //Also makes sure there is an external ID.
