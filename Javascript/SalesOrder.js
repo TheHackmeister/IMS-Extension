@@ -9,6 +9,10 @@ var deleteSalesOrderline = function (line, id, e) {
 	deleteSalesOrderlineOld(line,id,e);
 }
 
+
+
+
+
 /* Brad has fixed.
 // Reorganizes the returns once the load return button is pressed. 
 var loadSalesOrderDetailOld = loadSalesOrderDetail;

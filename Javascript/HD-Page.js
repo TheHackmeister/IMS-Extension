@@ -1,28 +1,14 @@
-$('<li class="folder root closed"> \
-		<a href="#" onclick="showMenu(this); return false;"> \
-			<div>Improved Pages</div> \
-		</a> \
-		<ul class="hide"> \
-			<li class="contents"> \
-				<a href="javascript: loadImprovedEditAsset();"> \
-					<div>Improved Edit Asset</div> \
-				</a> \
-			</li> \
-		</ul> \
-	</li>').insertAfter('.leftMenu > .folder.root.closed:last');
-
-
-
-
 var AssetControllerAdvanced = function (id, checker) {
 	AssetController.apply(this,arguments);
 	
-	this.event.on("change", $.proxy(this.load,this));
+	this.event.on("keyup", $.proxy(function(event) {if(event.keyCode == 13 || event.keyCode == 10) this.load();},this));
 	this.event.on("loaded", $.proxy(function() {this.checkAsset(checker.assetDiv, function(){console.log("Finished");});},checker));
 	this.event.on("loaded", $.proxy(this.stripSaveOnClick,this));
 	
 }
+try {
 AssetControllerAdvanced.prototype = new Object(AssetController.prototype);
+} catch (err) { location.reload(); }
 
 AssetControllerAdvanced.prototype.select = function () {
 	this.asset.select();
@@ -56,6 +42,7 @@ var loadImprovedEditAsset = function () {
 	$('#improvedAssetDiv').on('click', '[value="save"]' ,function () {saveAsset(getEditAssetID());improvedAsset.select();});
 	improvedAsset.select();
 }
+
 
 
 

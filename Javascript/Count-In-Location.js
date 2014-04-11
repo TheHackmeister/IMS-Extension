@@ -59,3 +59,6 @@ var countInLocation = function () {
 	});
 	this.$("<div>" + arrayS + "</div>").insertAfter('#assetCountWrapper')
 }
+
+
+

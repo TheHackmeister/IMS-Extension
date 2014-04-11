@@ -1,17 +1,21 @@
 ToDo:
 	High Priority
-		Links get added under SO if they have that option. UH!
-	
+		EAN Check. Set variable that the thing can look up?
+		
 	Medium Priority
 		Give Asset(Or Form?) some kind of error checking.
 		Integrate a version of HD testing.
 			Save and new number focus and select ID field.
 			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
 		Make returns not change page. Add response to page, and remove in the same way so does.
+		Consider making a laptop guesser. Could use AI
+		Edit asset search by SN. Would have to split load into loadFromID and loadFromSN and pick the one at load. Also, loadFromSN first has to look up SN, then load that Asset.
+			Maybe I can have a precommand that says getSN. I get the SN, then I load it.
+		Have ability to turn off features.
 		
 	Low Priority
-		Add event listener to location in PO. Also do so on selecting 0f product. 
 		If number is product, just do that product.
+		
 			
 	Back burner
 		Create Ultimate transfer. 	

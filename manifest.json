@@ -1,13 +1,14 @@
 {
   "manifest_version": 2,
   "name": "IMS Improved",
-  "version": "0.5.1.0",
+  "version": "1.0.0.0",
   "author": "Spencer Hachmeister",	
   "description": "Makes improvements to IMS",
-  "permissions": ["storage"],
+  "permissions": ["storage", "http://63.253.103.78/dashboard.php*"],
    "options_page": "options.html",
   "web_accessible_resources": [
-    "Javascript/*.js"
+    "Javascript/*.js",
+	"combind.js"
   ], 
  "content_scripts": [
     {

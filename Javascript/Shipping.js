@@ -14,3 +14,6 @@ var addSalesOrderLine = function (id) {
 	$('#addSalesOrderlineAssets').val("");
 	beep.play(100,"Good");
 }
+
+
+

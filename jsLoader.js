@@ -1,25 +1,34 @@
+
+
 var addToPage = function (loc) {
 	var s = document.createElement("script");
 	s.src = chrome.extension.getURL(loc);
 	(document.head||document.documentElement).appendChild(s);
 }
-
+//Setup stuff.
 addToPage("Javascript\\md5.js");
-
-
 addToPage("Javascript\\SetupIMS.js");
+
+//General Use.
+addToPage("Javascript\\InputForm.js");
 addToPage("Javascript\\General.js");
+addToPage("Javascript\\Listeners.js");
+addToPage("Javascript\\Count-In-Location.js");
+addToPage("Javascript\\SalesOrder.js");
+addToPage("Javascript\\AHK.js");
+
+
+// Depends on Input Form.
 addToPage("Javascript\\Assets.js");
 addToPage("Javascript\\Returns.js");
-addToPage("Javascript\\SalesOrder.js");
-addToPage("Javascript\\Count-In-Location.js");
-addToPage("Javascript\\HD-Page.js");
-addToPage("Javascript\\Build.js");
+addToPage("Javascript\\Build.js"); //I don't think this depends on InputForm.
+addToPage("Javascript\\HD-Page.js"); //Depends on Asset Controller.
+
+
 //addToPage("Javascript\\Boxing-CreateLoc.js");
 //addToPage("Javascript\\Boxing-CurrentBox.js");
 //addToPage("Javascript\\Boxing-CurrentLoc.js");
 //addToPage("Javascript\\Boxing-Init.js");
-
 
 chrome.storage.sync.get("SautoAddToSO", function (retVal) {
     if(retVal.SautoAddToSO == true) {

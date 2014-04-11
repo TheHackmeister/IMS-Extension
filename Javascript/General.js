@@ -1,13 +1,12 @@
+//This prevents the backspace from going back a page. Important because AHK clears the shortcuts with a backspace.
+window.addEventListener('keydown',function(e){
+	if(e.keyIdentifier=='U+0008'||e.keyIdentifier=='Backspace'){
+		if(e.target==document.body||e.target.type=="radio" || e.target.type=="button"){ 
+			e.preventDefault();
+		}
+	}
+},true);
 //This stuff improves general IMS functionality	
-
-//Upon enter, these move the focus to a more helpful box.
-$('body').on('change', "#editAssetTransferLocation", function() {$('#editAssetTransferAssets').select();});
-$('body').on('change', "#editAssetTransferEbayAuction", function() {$('#editAssetTransferAssets').select();});
-$('body').on('change', "#editLocationTransferParent", function() {$('#editLocationTransferLocation').select();});
-
-$('body').on('change', "#searchOrderText", function() {$('[value="search"]').click();});
-$('body').on('change', "#searchAssetText", function() {$('[value="search"]').click();});
-$('body').on('change', "#searchLocationText", function() {$('[value="search"]').click();});
 
 //This allows me to call something after an AJAX call without overloading another function.
 var ajaxCallback = function (func, ct) {
@@ -48,53 +47,7 @@ hideLoading = function (){
 }
 
 //Overloads the newWindow function. Adds clicking the print button on page load and adds a more useful count for the short report
-md5Function(newWindow, "newWindow", "f9910d0afe84fac4a58824b891fc8f92");/*
-function newWindow(string, file, plugin){ 
-	var code = '';
-	if(plugin){
-		string = string + '&file=' + file + '&plugin='+plugin;
-	}else{
-		string = string + '&file=' + file;
-	}
-	var response;
-	$.ajax({
-		url: 'pagehandler.php',
-		data: string,
-		async: false,
-		dataType: 'html',
-		type: 'POST',
-		success: function(data) {
-			response = data;
-//			eval(code);
-            var wnd = window.open("", "_blank", "location=yes");
-            wnd.document.write(response);
-            $(document).foundation();   
-		},
-		error: function(xhr, status, error) {
-			var err = eval('(' + xhr.responseText + ')');
-			response = err.Message;
-		}
-	}); 
-	var wnd = window.open('about:blank', '', '_blank');
-	wnd.document.write(response);
-	if (plugin == 'assets'){
-		wnd.document.close();
-		wnd.onload = function( ) {
-			wnd.document.title = 'Print Ready';
-			wnd.printWindow();
-		}
-	} else if (file == 'assetcountbylocationshortprocess.php') {
-		wnd.document.close();
-		wnd.Array.prototype.remove = Array.prototype.remove;
-		wnd.findAndRemove = findAndRemove;
-		wnd.countInLocation = countInLocation;
-
-		wnd.onload = function () {
-			wnd.countInLocation();
-		}
-	}
-}
-*/
+md5Function(newWindow, "newWindow", "f9910d0afe84fac4a58824b891fc8f92");
 var newWindow = function (string, file, plugin, print){   
     var code = '';
 
@@ -143,12 +96,72 @@ var newWindow = function (string, file, plugin, print){
     });
 } 
 
+//Create a replacement function for the AHK program. 
+md5Function(goods_receipt_addAssetSelectProduct, "goods_receipt_addAssetSelectProduct", "f73794d7c2c01f8fd9091f6d6cc6b870");
+var goods_receipt_addAssetSelectProductOld = goods_receipt_addAssetSelectProduct;
+var goods_receipt_addAssetSelectProduct = function() {
+	$('#addOrderlineSN').focus();
+	goods_receipt_addAssetSelectProductOld.apply(this,arguments);
+}
+
+//I override this to not trigger when the first character is a ;, which is what I start all of my AHK shortcuts with.
+md5Function(goods_receipt_addAssetSearchProduct,"goods_receipt_addAssetSearchProduct", "07686248460e526e055b9b6ba5f43d22");
+var goods_receipt_addAssetSearchProductOld = goods_receipt_addAssetSearchProduct;
+var goods_receipt_addAssetSearchProduct = function (event){    
+	if($('#addAssetProductSearchText').val().indexOf(";") == 0) {
+		return;
+	} 
+	goods_receipt_addAssetSearchProductOld.apply(this,arguments);
+} 
+
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.
 md5Function(goods_receipt_addLine, "goods_receipt_addLine", "b715613c9ede8cb4cab0e4370f6bde3e");
+//This is temporary until Brad removes the error on line 25.
+function goods_receipt_addLine(id){
+    var product = document.getElementById('addAssetProductID').value;        
+    var order = id;
+    //var qty = document.getElementById('addOrderlineQTY').value;
+    var sn = document.getElementById('addOrderlineSN').value;
+
+    var condition = '';
+    if($('#addAssetOrderlineConditionDropDown').length > 0){
+        condition = "&condition=" + document.getElementById('addAssetOrderlineConditionDropDown').value;
+    }
+
+    var location = '';
+    if($('#addOrderlineLocation').length){
+        location = "&location="+document.getElementById('addOrderlineLocation').value;
+    }
+
+    var desc = document.getElementById('addAssetProductSearchText').value;
+    
+    //var string = "product="+product+"&order="+order+"&qty="+qty+"&sn="+sn+"&location="+location+"&desc="+desc;
+	var string = "product="+product+"&order="+order+"&sn="+sn+"&desc="+desc + location + condition;
+    var file = 'addorderline.php';
+
+    ajax(string, file, function(response){
+    	if(response.indexOf("Re-enter location key") == -1 && response.indexOf("SN exists. No duplicate SN allowed.") == -1){          
+	         document.getElementById('addAssetProductID').value = '';
+	         //document.getElementById('addOrderlineQTY').value = '';
+	         document.getElementById('addOrderlineSN').value = '';
+	         document.getElementById('addOrderlineLocation').value = '';
+             document.getElementById('addAssetProductSearchItemNumberText').value = '';
+	         document.getElementById('addAssetProductSearchText').value = '';
+             $('#addAssetOrderlineConditionDropDown').val('NULL');
+	         document.getElementById('addOrderlineResult').value = 'Asset Added';
+
+	         $('#orderlineTable').prepend(response);
+	    } 
+	    else{
+	         document.getElementById("addOrderlineResult").innerHTML = response;
+	    } 
+    }, 'goods_receipt');
+} 
+
 var goods_receipt_addLineOld = goods_receipt_addLine;
 var goods_receipt_addLine = function() {
 	window.skipHide = true;
-	$('#addOrderLineResult').html("");
+	$('#addOrderlineResult').html("");
 	ajaxCallback(addOrderLineListener);
 	goods_receipt_addLineOld.apply(this,arguments);
 }
@@ -162,6 +175,16 @@ var addOrderLineListener = function() {
 	$('#orderlineTable a')[0].click();
 };
 var addOrderLineListener2 = function () {
+	if($('#template' + getEditAssetID()).length > 0) {
+		$('a:contains(Templates:)').click();
+		$('#specTemplate' + getEditAssetID()).prop('checked', true);
+		$('#testTemplate' + getEditAssetID()).prop('checked', true);
+		
+		if($('#template' + getEditAssetID() + ' option').length == 2) {
+			$('#template' + getEditAssetID() + ' option').eq(1).prop('selected', true);
+			$('[value="APPLY"]').click();
+		} 
+	}
 	$('#editOrderlineExternalAsset').focus().val($('#editOrderlineExternalAsset').val());
 };
 
@@ -172,6 +195,7 @@ function getEditAssetID(assetDiv) {
 }
 
 //Automatically locks a PO when saved. Also sets focus to the product description box after save.
+//Also makes sure there is an external ID.
 md5Function(saveAsset,"saveAsset", "e30397ccef9924fe928eee9758b52b28");
 var saveAssetOld = saveAsset;
 var saveAsset = function(asset) {
@@ -182,36 +206,61 @@ var saveAsset = function(asset) {
 var saveAssetListener = function (asset,id) {
 
 	var handler = function (asset,id) {
+		$("." + id).eq(0).off("DOMSubtreeModified");
+		$("." + id).eq(0).html($("." + id).eq(0).html() + " ");
+	
 		//If we're not adding to a PO, don't lock condition. 
 		if($('h5:contains(Grading/Receiving)').length < 1) return;
 		
-		scrollWindow("fourth");
-		
 		saveAssetCondition(asset);		
-        $('#addAssetProductSearchText').focus();    
-		
-		$("." + id).eq(0).off("DOMSubtreeModified");
-		$("." + id).eq(0).html($("." + id).eq(0).html() + " ");
+		scrollWindow("fourth");
+		$('#addAssetProductSearchText').focus();    
+
 	}.bind(this, asset, id);
 	return handler;
 }
-/*
-//loadReturnDetail has been fixed.
-//loadDetail is broken as of 3/10/14 on ims-responsive. It is the same call as the normal IMS page, but is missing html. 
-var loadDetailOld = loadDetail;
-var loadDetail = function() {
-//	var returnID = $('#returnID').val() || false;
-	var soID = $('#sorderID').val() || false;
-//	if(returnID) {
-//		ajaxCallback(function(){loadReturnDetail(returnID);});
-//	} else 
-	if (soID) {
-		ajaxCallback(function(){viewSODetailList(soID, 'viewsalesorderdetailcontainer.php');});
-	} else {
-		loadDetailOld.apply(this, arguments);
-	}	
+
+var getPONumber = function() {
+	return $('h6:contains(PO: )').html().replace("PO: ", "");
 }
-*/
+
+//Returns true if actions should be stopped. False if actions should continue.
+var checkEAN = function () {
+	var po = getPONumber();
+	var check = true; 
+	var wrapper = function () {
+		if(po != getPONumber()) {
+			check = true;
+			po = getPONumber();
+		}
+		
+		if(!check) 	return false;		
+		
+		var stop = false;	
+		var error = false;
+		if($('#editOrderlineExternalAsset').val() == "") {
+			stop = confirm("You have not entered an external asset number. Stop and fix?");
+			error = true;
+		} else if($('#editOrderlineExternalCondition' + getEditAssetID()).val() == "") {
+			stop = 	("The external asset number is probably wrong. Stop and fix?");
+			error = true;
+		}
+		
+		if(error) {
+			if(stop) {
+				return true;
+			} else {
+				answer = confirm("Would you like to turn off external asset number checking for this PO?");
+				if(answer == true) check = false;
+				return false;
+			}
+		} else {
+			return false;
+		}
+	}
+	wrapper();
+	checkEAN = wrapper;
+}
 
 ///////////////
 //Adds features
@@ -234,89 +283,6 @@ function clickTopOption(expectedSearches) {
 	});
 }
 
-// Triggers for selecting PO, SO, or Return
-$('#dashboardBody').on('keyup', '#searchOrderText', function(e) {
-if(e.keyCode == 10 || e.keyCode == 13) {
-
-	if($('h5:contains(Edit Exchange/Return)').length > 0) {
-		clickTopOption(1);
-		searchReturn();
-	} else if ($('h5:contains(Edit Sales Order)').length > 0) {
-		clickTopOption(2);
-		searchSalesOrder();
-	} else if ($('h5:contains(Edit Goods Receipt)').length > 0) {
-		clickTopOption(2);
-		searchOrder();
-	}
-}
-});
-$('#dashboardBody').on('click', '[onclick="searchAsset()"]', function(e) {
-	clickTopOption(1);
-});
-
-
-//This is the base for the form objects. Just has an ID and a function to change the ID of $ objects without trouble.
-var InputForm = function (id) {
-	this.id = id;
-	this.event;
-}
-//Could I simplify this to simple add and remove the ID?
-InputForm.prototype.changeDivs = function() {
-	 var elements = [];
-	 for (var i = 0; i < arguments.length; i += 2) {
-		var arg = arguments[i];
-		arg.originalID = arg.attr('id');
-		arg.attr('id', arguments[i+1]);
-		elements.push(arg);
-	 }
-	 return elements;
-}
-
-InputForm.prototype.restoreDivs = function(elements) {
-	elements.forEach(function(el) {
-		el.attr('id', el.originalID);
-	});
-}
-
-InputForm.prototype.generateID = function () {
-	var rand = Math.random()*(10000-1000) + 1000;
-	rand = Math.floor(rand);
-	return rand;
-}
-
-InputForm.prototype.generateElement = function (elementId) {
-	var element = $('#' + this.id + elementId);
-	if(element.length > 0) {
-		return element;
-	} else {
-		var elementDiv = $('#' + this.id + 'Div');
-		if(elementDiv.length == 0) { //there is not an element div 
-			elementDiv = $('<div/>', {id: this.id + "Div", class: this.id, style: "display:​ none; width: 0px; height: 0px; overflow: hidden;​"}).appendTo('#dashboard');
-		}
-		return $('<div/>', {id: this.id + elementId}).appendTo(elementDiv);
-	}
-}
-
-InputForm.prototype.generateInput = function (elementId) {
-	var element = $('#' + this.id + elementId);
-	if(element.length > 0) {
-		return element;
-	} else {
-		var elementDiv = $('#' + this.id + 'Div');
-		if(elementDiv.length == 0) { //there is not an element div 
-			elementDiv = $('<div/>', {id: this.id + "Div", class: this.id, style: "display:​ none; width: 0px; height: 0px; overflow: hidden;​"}).appendTo('#dashboard');
-		}
-		return $('<input/>', {id: this.id + elementId, type: "text", value: ""}).appendTo(elementDiv);
-	}
-}
-
-InputForm.prototype.triggerEvent = function (event) {
-	this.event.trigger(event);
-}
-
-InputForm.prototype.handleError = function (error) {
-	alert(error);
-}
 
 //Creates an object that makes beep noises. Used for quality control checks later on.
  function SoundAlert() {
@@ -339,3 +305,6 @@ SoundAlert.prototype.play = function (time, freq, callback) {
 		},time);
 }
 var beep = new SoundAlert();
+
+
+

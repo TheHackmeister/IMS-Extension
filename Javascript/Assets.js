@@ -19,7 +19,9 @@ var AssetController = function (id) {
 	}, this));
 */
 }
-AssetController.prototype = Object.create(InputForm.prototype);
+try {
+	AssetController.prototype = Object.create(InputForm.prototype);
+} catch (err) { location.reload(); }
 
 md5Function(selectAsset,"selectAsset", "995cb46a96ac21138a7d30edee17bd7f");
 AssetController.prototype.selectAsset = function (id) {
@@ -196,6 +198,8 @@ AssetController.prototype.getType = function () {
 AssetController.prototype.printTag = function () {
 	newWindow("id=" + this.getAssetID(), 'printassettag.php', 'assets', true);
 }
+
+
 
 
 /*

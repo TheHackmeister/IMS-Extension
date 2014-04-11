@@ -185,3 +185,4 @@ var md5Function = function (func, funcName, md5String) {
 		console.log("The " + funcName + " function has changed" );
 	}
 }
+

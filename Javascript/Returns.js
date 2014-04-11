@@ -111,7 +111,9 @@ console.log("returned");
 		this.processNextReturn();
 	}, this));
 }
+try {
 ReturnForm.prototype = Object.create(InputForm.prototype);
+} catch (err) { location.reload(); }
 
 ReturnForm.prototype.returnAsset = function () {
 console.log("Return Start");		
@@ -176,3 +178,6 @@ ReturnForm.prototype.nextAction = function (id) {
 console.log("Next Action (Load) " + id);		
 		this.asset.load(id);
 }
+
+
+

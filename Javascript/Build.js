@@ -131,10 +131,10 @@ AssetCheck.prototype.unsetRadio = function (event) {
 AssetCheck.prototype.buildSetup = function () {
 	var container = $('<div style="margin-top:65px;"/>');
 	var check = this.buildContainer('assetCheck','Check', this.buildCheckList);
-//	container.append(check);
+	container.append(check);
 	container.on('click', '.option', this.toggleVisible);
 	var set = this.buildContainer('assetSet', 'Set', this.buildSetList);
-//	container.append(set);
+	container.append(set);
 	return container;
 }
 
@@ -416,6 +416,8 @@ AssetCheck.prototype.checkCPUType = function (assetDiv, el) {
 AssetCheck.prototype.getSpecialAsset = function (name) {
 	return $('.assetCheck :input[name="' + name + '"]').parent().parent().children(':checkbox');
 }
+
+
 
 
 
