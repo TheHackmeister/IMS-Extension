@@ -1,6 +1,6 @@
 ToDo:
 	High Priority
-		EAN Check. Set variable that the thing can look up?
+		
 		
 	Medium Priority
 		Give Asset(Or Form?) some kind of error checking.
@@ -25,6 +25,7 @@ ToDo:
 		Add by SN to Return. 
 	
 Things this fixes:
+	Checks EAN
 	Automatically selects PO
 	Deleting an asset from a SO
 	*Better return page

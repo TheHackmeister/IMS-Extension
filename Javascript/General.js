@@ -1,11 +1,3 @@
-//This prevents the backspace from going back a page. Important because AHK clears the shortcuts with a backspace.
-window.addEventListener('keydown',function(e){
-	if(e.keyIdentifier=='U+0008'||e.keyIdentifier=='Backspace'){
-		if(e.target==document.body||e.target.type=="radio" || e.target.type=="button"){ 
-			e.preventDefault();
-		}
-	}
-},true);
 //This stuff improves general IMS functionality	
 
 //This allows me to call something after an AJAX call without overloading another function.
@@ -117,7 +109,7 @@ var goods_receipt_addAssetSearchProduct = function (event){
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.
 md5Function(goods_receipt_addLine, "goods_receipt_addLine", "b715613c9ede8cb4cab0e4370f6bde3e");
 //This is temporary until Brad removes the error on line 25.
-function goods_receipt_addLine(id){
+var goods_receipt_addLine = function(id){
     var product = document.getElementById('addAssetProductID').value;        
     var order = id;
     //var qty = document.getElementById('addOrderlineQTY').value;
@@ -193,58 +185,24 @@ function getEditAssetID(assetDiv) {
 	return assetDiv.find('#editAssetID').val();
 }
 
-md5Function(checkExternalCondition,"checkExternalCondition", "f4739f3f1a07bb86bc8f466ed2559ad6");
-var checkExternalCondition = function (external, asset){
-    var string = 'external='+external+"&asset="+asset;
-    var file = 'checkexternalcondition.php';
-
-    ajax(string, file, function(response){
-        
-        var externalCondition = $('#editOrderlineExternalCondition'+asset);     
-        if (response == 'no match'){
-            $(externalCondition).addClass('alert');
-            $('#editOrderlineExternalCondition'+asset).val('');
-            $('#editOrderlineExternalConditionDetail'+asset).val('');
-        }else{
-        	$values = response.split(":");
-
-        	if($values[0] == 'pass'){
-	        	$(externalCondition).removeClass('alert');
-        	}else{
-	        	$(externalCondition).addClass('alert');
-        	}            
-                          
-            $('#editOrderlineExternalCondition'+asset).val($values[1]);
-            $('#editOrderlineExternalConditionDetail'+asset).val($values[2]);
-			checkEAN();
-        }
-    }, 'assets');
-} 
-
 //Automatically locks a PO when saved. Also sets focus to the product description box after save.
 //Also makes sure there is an external ID.
 md5Function(saveAsset,"saveAsset", "e30397ccef9924fe928eee9758b52b28");
 var saveAssetOld = saveAsset;
 var saveAsset = function(asset) {
 	var id = "editOrderlineResult" + arguments[0];
-	$("." + id).eq(0).on("DOMSubtreeModified",saveAssetListener(asset,id));
+	ajaxCallback(function(){saveAssetListener(asset);},3);
 	saveAssetOld.apply(this, arguments);
 };
 var saveAssetListener = function (asset,id) {
-
-	var handler = function (asset,id) {
-		$("." + id).eq(0).off("DOMSubtreeModified");
-		$("." + id).eq(0).html($("." + id).eq(0).html() + " ");
-	
 		//If we're not adding to a PO, don't lock condition. 
 		if($('h5:contains(Grading/Receiving)').length < 1) return;
+
+		if(checkEAN()) return;
 		
 		saveAssetCondition(asset);		
 		scrollWindow("fourth");
 		$('#addAssetProductSearchText').focus();    
-
-	}.bind(this, asset, id);
-	return handler;
 }
 
 var getPONumber = function() {
@@ -269,7 +227,7 @@ var checkEAN = function () {
 			stop = confirm("You have not entered an external asset number. Stop and fix?");
 			error = true;
 		} else if($('#editOrderlineExternalCondition' + getEditAssetID()).val() == "") {
-			stop = 	("The external asset number is probably wrong. Stop and fix?");
+			stop = confirm("The external asset number is probably wrong. Stop and fix?");
 			error = true;
 		}
 		
@@ -284,9 +242,9 @@ var checkEAN = function () {
 		} else {
 			return false;
 		}
-	}
-	wrapper();
+	}	
 	checkEAN = wrapper;
+	return wrapper();
 }
 
 ///////////////

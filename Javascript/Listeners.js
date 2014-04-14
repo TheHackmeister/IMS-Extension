@@ -1,3 +1,12 @@
+//This prevents the backspace from going back a page. Important because AHK clears the shortcuts with a backspace.
+window.addEventListener('keydown',function(e){
+	if(e.keyIdentifier=='U+0008'||e.keyIdentifier=='Backspace'){
+		if(e.target==document.body || e.target.type == "button" || e.target.type == "select-one" || e.target.type == "radio"){ 
+			e.preventDefault();
+		}
+	}
+},true);
+
 $('<li class="folder root closed"> \
 		<a href="#" onclick="showMenu(this); return false;"> \
 			<div>Improved Pages</div> \
