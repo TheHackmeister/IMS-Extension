@@ -12,6 +12,7 @@ ToDo:
 		Integrate a version of HD testing.
 			Save and new number focus and select ID field.
 			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
+		Better eroor messages. Include what was expected and what was found.
 		
 	Low Priority
 		Make returns not change page. Add response to page, and remove in the same way so does.
