@@ -1,19 +1,55 @@
+/*
+The order of this file goes like this:
+Event functions
+Builds for basic html
+Builds for useful html
+Builds for dropdowns
+Checker function
+Basic checker functions
+*/
 
-var AssetCheck = function (assetDiv) {
-	this.assetDiv = assetDiv;
-
+var AssetCheck = function (id,controlDiv) {
+	this.id = id || this.generateID();	
+	AssetController.apply(this,arguments);
+	this.controlDiv = controlDiv || $('#' + this.id + 'ControlDiv');
+		
+	this.controlDiv.on('click', '.option', this.toggleVisible);
+	this.controlDiv.on('click', '.container', $.proxy(onClick,this));	
+	this.controlDiv.on('click', '.radioCheckbox', this.unsetRadio);
+	
+	this.event.on("loaded", $.proxy(this.stripSaveOnClick,this));
+	this.editAssetDiv.on('click', '[value="save"]' ,function () {saveAsset(getEditAssetID());this.select();});
 }
-AssetCheck.prototype.attach = function (parent,child) {
-	parent.append(child);
+try {
+	AssetCheck.prototype = Object.create(AssetController.prototype);
+} catch (err) { location.reload(); }
+
+//For events.
+AssetCheck.prototype.toggleVisible = function (event) {
+	$(event.target).parent().children('div').toggle();
 }
 
+AssetCheck.prototype.unsetRadio = function (event) {
+	if($(event.target).is(':checked')) {
+		$(event.target).parent().children('input[type="radio"]:checked').prop('checked', false);
+	}
+}
+
+AssetCheck.prototype.select = function () {
+	this.asset.select();
+}
+
+AssetCheck.prototype.stripSaveOnClick = function () {
+	this.editAssetDiv.find('[value=save]').attr('onclick','');
+}
+
+//These build the basic html. 
 AssetCheck.prototype.buildContainer = function (eClass,text,onClick) {
 	var element = $('<div/>');
 	element.addClass(eClass);
 
 	var checkbox = $('<input type="checkbox"/>')
 	checkbox.addClass('container');
-	checkbox.on('click', $.proxy(onClick,this));
 	
 	var container = $('<div/>').css('padding-left', '20px');
 	
@@ -24,8 +60,6 @@ AssetCheck.prototype.buildContainer = function (eClass,text,onClick) {
 	return element;
 }
 
-//I think I can remove eClass
-
 AssetCheck.prototype.buildRadio = function (specName,specNumber,special,good,bad) {
 	var el = $('<div/>');
 	good = good || "P";
@@ -33,15 +67,12 @@ AssetCheck.prototype.buildRadio = function (specName,specNumber,special,good,bad
 	special = special || false;
 	specNumber = specNumber + "Checker";
 	var titleCheckbox = $('<input type="checkbox"/>')
-//	titleCheckbox.addClass(eClass);
 	titleCheckbox.addClass("option");
 	
 	var spec = $('<div/>').hide();
 	var yes = $('<input class="inputOption" type="radio" name="' + specNumber + '" value="1"/>');
 	var no = $('<input class="inputOption" type="radio" name="' + specNumber + '" value="0"/>');
-	var checkbox = $('<input type="checkbox" name="' + specNumber + '"/>');
-//I think I need an event based higher up.	
-	checkbox.on('click', this.unsetRadio);
+	var checkbox = $('<input type="checkbox" class="radioCheckbox" name="' + specNumber + '"/>');
 	
 	if(special) {
 		spec.addClass("special");
@@ -99,7 +130,6 @@ AssetCheck.prototype.buildCheckBox = function (specName,specNumber, special) {
 	return el;
 }
 
-
 AssetCheck.prototype.buildOption = function (specName,buildFunction, special) {
 	var el = $('<div/>');
 	var titleCheckbox = $('<input type="checkbox"/>')
@@ -118,26 +148,7 @@ AssetCheck.prototype.buildOption = function (specName,buildFunction, special) {
 	return el;
 }
 
-AssetCheck.prototype.toggleVisible = function (event) {
-	$(event.target).parent().children('div').toggle();
-}
-
-AssetCheck.prototype.unsetRadio = function (event) {
-	if($(event.target).is(':checked')) {
-		$(event.target).parent().children('input[type="radio"]:checked').prop('checked', false);
-	}
-}
-
-AssetCheck.prototype.buildSetup = function () {
-	var container = $('<div style="margin-top:65px;"/>');
-	var check = this.buildContainer('assetCheck','Check', this.buildCheckList);
-	container.append(check);
-	container.on('click', '.option', this.toggleVisible);
-	var set = this.buildContainer('assetSet', 'Set', this.buildSetList);
-	container.append(set);
-	return container;
-}
-
+//These compile the basic html units into usable html. 
 AssetCheck.prototype.buildCheckList = function (event) {
 	var container = $(event.target).parent().children('div');
 	if(!$(event.target).is(':checked')) {
@@ -145,7 +156,6 @@ AssetCheck.prototype.buildCheckList = function (event) {
 		return;
 	}
 	
-//These will probably need to be modified to fit whatever I come up with in the execution side.
 	container.append(this.buildTextBox('Product','Product', 'special'));
 	container.append(this.buildOption('Type',this.buildOptionType, 'special'));
 	container.append(this.buildCheckBox('Scrapped','Scrap', 'special')); // Should have option to check for, not for, and not check. 
@@ -163,7 +173,6 @@ AssetCheck.prototype.buildSetList = function () {
 		return;
 	}
 	
-//These will probably need to be modified to fit whatever I come up with in the execution side.
 	container.append(this.buildTextBox('Product','Product'));
 	container.append(this.buildContainer('checkSpecs','Specs', this.buildSpecs));
 	container.append(this.buildContainer('checkTests','Tests', this.buildTests));
@@ -230,7 +239,7 @@ AssetCheck.prototype.buildTests = function (event) {
 	container.append(this.buildRadio('PASS POST','test16'));	
 }
 
-
+//These build dropdown menus.
 AssetCheck.prototype.buildOptionRam = function () {
 	return $('<select class="inputOption" name="spec7"> \
 				<option value="null"></option> \
@@ -304,13 +313,14 @@ AssetCheck.prototype.buildOptionType = function () {
 			</select>');
 }
 
-AssetCheck.prototype.checkAsset = function (assetDiv, finishedFunction) {
+//These handle the checking
+AssetCheck.prototype.checkAsset = function (finishedFunction) {
 	
-	this.checkProduct(assetDiv, this.getSpecialAsset('Product'));
-	this.checkAssetType(assetDiv, this.getSpecialAsset('Type'));
-	this.checkDarked(assetDiv, this.getSpecialAsset('Scrap'), "SCRAPPED!");
-	this.checkDarked(assetDiv, this.getSpecialAsset('Shipped'), "SHIPPED!");
-	this.checkCPUType(assetDiv, this.getSpecialAsset('spec6'));
+	this.checkProduct(this.getSpecialAsset('Product'));
+	this.checkAssetType(this.getSpecialAsset('Type'));
+	this.checkDarked(this.getSpecialAsset('Scrap'), "SCRAPPED!");
+	this.checkDarked(this.getSpecialAsset('Shipped'), "SHIPPED!");
+	this.checkCPUType(this.getSpecialAsset('spec6'));
 		
 	//Checks each checked option.
 	$('.assetCheck .option:checked').parent().children('div').each(function(i,el) {
@@ -320,73 +330,77 @@ AssetCheck.prototype.checkAsset = function (assetDiv, finishedFunction) {
 		}		
 		//Radio Option
 		if(el.children(':input').length == 3) {
-			this.checkRadio(assetDiv, el);
+			this.checkRadio(el);
 		//Checkbox Option
 		} else if(el.children(':input:checkbox').length == 1) {
-			this.checkCheckbox(assetDiv, el);
+			this.checkCheckbox(el);
 		//Text Field
 		} else {
-			this.checkText(assetDiv, el);
+			this.checkText(el);
 		}
 	});
 	
 	finishedFunction();
 }
 
-AssetCheck.prototype.checkRadio = function(assetDiv, el) {
+AssetCheck.prototype.getSpecialAsset = function (name) {
+	return $('.assetCheck :input[name="' + name + '"]').parent().parent().children(':checkbox');
+}
+
+AssetCheck.prototype.checkRadio = function(el) {
 	var isChecked = el.children(':input:checkbox').is(':checked');
 	var val = el.children(':input:radio:checked').val() || 'undefined';
 	var name = el.children(':input:radio').prop('name').replace('Checker','');
 	//If the unset option is not enabled. 
 	if(isChecked == false) {
-		if(val != assetDiv.find('[name="' + name + '"]:checked').val()) {
+		if(val != this.editAssetDiv.find('[name="' + name + '"]:checked').val()) {
 			console.log("Radio Failure!");
 		}
 	} else {
 		//If the val is different, and but not unset.
-		if(val !=  assetDiv.find('[name="' + name + '"]:checked').val() && typeof(assetDiv.find('[name="' + name + '"]:checked').val()) != 'undefined') {
+		if(val !=  this.editAssetDiv.find('[name="' + name + '"]:checked').val() && typeof(this.editAssetDiv.find('[name="' + name + '"]:checked').val()) != 'undefined') {
 			console.log("Radio 1 Failure!");
 		}
 	}			
 }
 
-AssetCheck.prototype.checkCheckbox = function (assetDiv, el) {
+AssetCheck.prototype.checkCheckbox = function (el) {
 	var name = 	el.children(':input').prop('name');
 	var value = el.children(':input:checkbox').is(':checked');
 	
-	if(assetDiv.find('[name="' + name + '"]').is(':checked') != value) {
+	if(this.editAssetDiv.find('[name="' + name + '"]').is(':checked') != value) {
 		console.log("Failure!");
 	}
 }
 
-AssetCheck.prototype.checkText = function (assetDiv, el) {
+AssetCheck.prototype.checkText = function (el) {
 	var name = 	el.children(':input').prop('name');
 	var value = el.children(':input').val();
 	
-	if(assetDiv.find('[name="' + name + '"]').val() != value) {
+	if(this.editAssetDiv.find('[name="' + name + '"]').val() != value) {
 		console.log("Failure!");
 	}
 }
 
-AssetCheck.prototype.checkProduct = function (assetDiv, el) {
+AssetCheck.prototype.checkProduct = function (el) {
 	if(el.is(':checked')) {
 		var expected = el.parent().children('div').children(':input').val();
-		var assetProduct = 	assetDiv.find('#editOrderlineProductSearchText' + getEditAssetID(assetDiv)).val();
+		var assetProduct = 	this.editAssetDiv.find('#editOrderlineProductSearchText' + getEditAssetID(this.editAssetDiv)).val();
 		if(expected.toLowerCase() != assetProduct.toLowerCase()) {
 			console.log("Product Failure");
 		}		
 	}
 }
 
-AssetCheck.prototype.checkAssetType = function (assetDiv, el) {
+AssetCheck.prototype.checkAssetType = function (el) {
 	if(el.is(':checked')) {
 		var type;
-		if(assetDiv.find('[name="spec8"]').length > 0) type = "laptop"; //Webcam
-		else if(assetDiv.find('[name="spec19"]').length > 0) type = "tablet"; //Tablet OS
-		else if(assetDiv.find('[name="spec4"]').length > 0) type = "desktop"; //Form Factor
-		else if(assetDiv.find('[name="spec30"]').length > 0) type = "monitor"; //Brand 
-		else if(assetDiv.find('[name="spec13"]').length > 0) type = "hdd"; // HD Type
-		else if(assetDiv.find('[name="spec16"]').length > 0) type = "mp3"; //WIFI
+		if(this.editAssetDiv.find('[name="spec8"]').length > 0) type = "laptop"; //Webcam
+		else if(this.editAssetDiv.find('[name="spec19"]').length > 0) type = "tablet"; //Tablet OS
+		else if(this.editAssetDiv.find('[name="spec4"]').length > 0) type = "desktop"; //Form Factor
+		else if(this.editAssetDiv.find('[name="spec30"]').length > 0) type = "monitor"; //Brand 
+		else if(this.editAssetDiv.find('[name="spec13"]').length > 0) type = "hdd"; // HD Type
+		else if(this.editAssetDiv.find('[name="spec16"]').length > 0) type = "mp3"; //WIFI
 		else type = "other";
 		
 		if(type != el.parent().children('div').children('select').val()) {
@@ -395,7 +409,7 @@ AssetCheck.prototype.checkAssetType = function (assetDiv, el) {
 	}
 }
 
-AssetCheck.prototype.checkDarked = function (assetDiv, el, text) {
+AssetCheck.prototype.checkDarked = function (el, text) {
 	if(el.is(':checked')) {
 		if(el.parent().children('div').children(':checkbox').is(':checked') ^ $('#scrapText').html() == text) {
 			console.log(text+ " Failure");
@@ -403,38 +417,13 @@ AssetCheck.prototype.checkDarked = function (assetDiv, el, text) {
 	}
 }
 
-AssetCheck.prototype.checkCPUType = function (assetDiv, el) {
+AssetCheck.prototype.checkCPUType = function (el) {
 	if(el.is(':checked')) {
 		var expected = el.parent().children('div').children(':input').val();
-		var assetProduct = 	assetDiv.find('#searchOrderlineSpecText6').val();
+		var assetProduct = 	this.editAssetDiv.find('#searchOrderlineSpecText6').val();
 		if(expected.toLowerCase() != assetProduct.toLowerCase()) {
 			console.log("CPU Type Failure");
 		}	
 	}
 }
 
-AssetCheck.prototype.getSpecialAsset = function (name) {
-	return $('.assetCheck :input[name="' + name + '"]').parent().parent().children(':checkbox');
-}
-
-
-
-
-
-/*
-Build.prototype.buildOption = function (event) {
-
-}
-
-Build.prototype.buildOption = function (event) {
-
-}
-
-Build.prototype.buildOption = function (event) {
-
-}
-
-Build.prototype.buildOption = function (event) {
-
-}
-*/

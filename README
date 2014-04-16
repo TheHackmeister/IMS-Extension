@@ -1,21 +1,21 @@
 ToDo:
 	High Priority
-		
+		Rename Build + HD-Page. 
+		Move PO Specific commands in General to their own file. 
+		Remove Improved Page set.
+			Add alerts to the check, or remove check too.
+		Fix a listener in AssetCheck.
 		
 	Medium Priority
+		Improved Location Page. (Basically boxing)
 		Give Asset(Or Form?) some kind of error checking.
 		Integrate a version of HD testing.
 			Save and new number focus and select ID field.
 			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
-		Make returns not change page. Add response to page, and remove in the same way so does.
-		Consider making a laptop guesser. Could use AI
-		Edit asset search by SN. Would have to split load into loadFromID and loadFromSN and pick the one at load. Also, loadFromSN first has to look up SN, then load that Asset.
-			Maybe I can have a precommand that says getSN. I get the SN, then I load it.
-		Have ability to turn off features.
 		
 	Low Priority
+		Make returns not change page. Add response to page, and remove in the same way so does.
 		If number is product, just do that product.
-		
 			
 	Back burner
 		Create Ultimate transfer. 	
@@ -23,83 +23,46 @@ ToDo:
 		Boxing page
 		Check on location transfer. No asset should have more than 4 digits. 	
 		Add by SN to Return. 
+		Edit asset search by SN. Would have to split load into loadFromID and loadFromSN and pick the one at load. Also, loadFromSN first has to look up SN, then load that Asset.
+			Maybe I can have a precommand that says getSN. I get the SN, then I load it.
+		Consider making a laptop guesser. Could use AI
+		Have ability to turn off features.
 	
-Things this fixes:
-	Checks EAN
-	Automatically selects PO
-	Deleting an asset from a SO
-	*Better return page
+Features
+	Miscellaneous Usability
+		For POs, SOs, Returns, and Edit Assets, 
+			If there was only one result for the search, it is selected automatically. 
+			Allows submitting information with the enter key rather than clicking the button 
+			When enter is pressed (or an item is scanned) in the location field, focus is moved to the list field. (Not applicable for Edit Assets).
+		Deleting an asset from a SO is reflected immediately. 
+		Gives visual feedback for when page is loading
+		Short report includes a count by item description. 
+		Printing automatically pops up the print window, includes a way for the AutoHotKey program to tie in, and closes after printing.
+		Has option to immediately add scanned assets to a SO. 
+
+	POs
+		Allows better flow for adding product to a PO
+			Selecting a product moves focus to SN. 
+			Pressing enter (Or scanning) while in the SN field moves the focus to the Location field.
+			When adding lines to a PO
+				Prints tag
+				Selects asset
+				Focus external asset number.
+			Save automatically locks the condition and focuses the product field. 	
+		Checks EAN both for correctness and existence. 
+			
+	Returns
 		More normal transfer boxes
 		Clicking on the X removes item and reloads return order
-		Unsets condition after return.
-		*Because you can't add a product to a return, I removed the add product to return field.
-		*Add Product to Return
-		*Enter on return location should move to asset tags.
-	Gives visual feedback for when page is loading.
-	-Allows adding of product to sales order.
-	Allows submitting information with the enter key rather than clicking the button. 
-	Allows better flow for adding product to a PO
-		Automatically prints tag and loads new asset when adding to PO
-		Save automatically locks the condition and focuses the product field. 
-	Alerts me when Brad changes function calls.
-	
-Things this modifies:
-	showLoading
-	hideLoading
-	*addOrderLine
-		*Clears results
-		*Clicks print
-		*Sets focus to External Asset
-	saveAsset
-		Locks the condition
-		Sets focus to product line
-	loadReturnDetail
-		Reorganizes the Returns page
-	deleteSalesOrderline 
-		Brads code requires the calling element, but does not include it on the page. This finds that element and includes it in the call. 
-//	loadSalesOrderDetail
-//		Reorganizes the SO page
-//	*addSalesOrderLineProduct
-//		*Had to do some juggling of IDs. It happens here. 
-	loadDetail 
-		If in Return, runs the loadReturnDetail instead. 
-		-If in SO, it runs the viewSODetailList command instead. It is set to do it as a container. Can change.
-	*selectAsset
-		*Does not override, but I do use my own version to load assets. It removes the breadcrumb notification. 
-
-		
-Things this overloads:
-	newWindow (For short reports and for printing asset tags)
-	
-Things that are broken in this addon:
-	*Returns
-	
-Things that are broken in IMS:
-	Adding product to a SO. I have implemented a fix.
-	Adding product to a return. Needs back-end implementation. 
-	Saving a return does nothing. - Back-end.
-	Returns don't update the Managed Transfer list.  Back-end.
-	
-
-	
-	
-	
-	
-Short report gives number of each product type
-Navigation
-	Transfer Boxes
-	Auto selects PO, SO, Returns
-	Allows submitting information with the enter key rather than clicking the button. 
-Allows adding of product to sales order.
-	loadForm('editsalesorder.php','','so');
-Better return page
-	loadForm('editreturn.php','','returns');
-	More normal transfer boxes
-	Clicking on the X removes item and reloads return order
-	Unsets condition after return.
-	Because you can't add a product to a return, I removed the add product to return field.
-Gives visual feedback for when page is loading.
-
-Printing works better
-Has shipping option to automatically add to SO.
+		Unsets condition after return. (Option to turn off)
+		Because you can't add a product to a return, I removed the add product to return field.
+				
+	Improved Edit Asset Page
+		Lets you inspect and change assets without having to do the 4 clicks needed in the Edit Asset section.
+			
+	Behind The Scenes 
+		Auto Update
+		Alerts me when Brad changes function calls.
+		Has specific calls for the AutoHotKey program(barcodes) to tie into. 
+		Removed the backspace as a shortcut for the back button. It stops AutoHotKey from changing pages. 
 		

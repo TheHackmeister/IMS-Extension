@@ -21,8 +21,8 @@ addToPage("Javascript\\AHK.js");
 // Depends on Input Form.
 addToPage("Javascript\\Assets.js");
 addToPage("Javascript\\Returns.js");
-addToPage("Javascript\\Build.js"); //I don't think this depends on InputForm.
-addToPage("Javascript\\HD-Page.js"); //Depends on Asset Controller.
+addToPage("Javascript\\AssetCheck.js"); //Depends on AssetController.
+addToPage("Javascript\\ImprovedEditAsset.js"); //Depends on AssetCheck.
 
 
 //addToPage("Javascript\\Boxing-CreateLoc.js");

@@ -227,7 +227,7 @@ var checkEAN = function () {
 			stop = confirm("You have not entered an external asset number. Stop and fix?");
 			error = true;
 		} else if($('#editOrderlineExternalCondition' + getEditAssetID()).val() == "") {
-			stop = confirm("The external asset number is probably wrong. Stop and fix?");
+			stop = confirm("The external asset number is either wrong or you are in the wrong PO. Stop and fix?");
 			error = true;
 		}
 		
