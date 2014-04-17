@@ -47,7 +47,6 @@ AssetCheckSingle.prototype.transfer = function () {
 		var location = loc.parent().find('div > :input').val();
 		var assets = this.asset.val();
 		var string = "location="+location + "&assets=" + assets;
-		console.log (location);
 		var file = 'editassettransferprocess.php';
 		ajax(string, file, $.proxy(function(response){
 			if (response.indexOf("Transfer Successful") != -1){
@@ -57,7 +56,7 @@ AssetCheckSingle.prototype.transfer = function () {
 			}
 		},this), 'assets');
 	} else {
-		this.event.trigger('finished');
+		this.errorCheck('finished');
 	}
 }
 

@@ -133,6 +133,27 @@ AssetCheck.prototype.buildCheckBox = function (specName,specNumber, special, tex
 	return el;
 }
 
+AssetCheck.prototype.buildSimple = function (specName,specNumber, special, text) {
+	var el = $('<div/>');
+	text = text || "Checked";
+	var titleCheckbox = $('<input type="checkbox"/>')
+	var checkbox = $('<input type="checkbox" style="visibility:hidden;" class="inputOption" name="' + specNumber + '" />');
+	titleCheckbox.addClass("option");
+	special = special || false;
+	var spec = $('<div/>').hide();
+	spec.prepend(text);
+	var name = $('<span/>').html(specName);	
+		
+	if(special) {
+		spec.addClass("special");
+	}
+	el.append(titleCheckbox);
+	el.append(name);
+	spec.append(checkbox);	
+	el.append(spec);
+	return el;
+}
+
 AssetCheck.prototype.buildOption = function (specName,buildFunction, special) {
 	var el = $('<div/>');
 	var titleCheckbox = $('<input type="checkbox"/>')
@@ -174,8 +195,8 @@ AssetCheck.prototype.buildCheckList = function (event) {
 	container.append(this.buildOption('CPU Gen',this.buildOptionCPUGen, 'special'));
 	container.append(this.buildOption('CPU Brand',this.buildOptionCPUBrand, 'special'));
 	container.append(this.buildOption('Condition',this.buildOptionCondition, 'special'));
-	container.append(this.buildCheckBox('Prod Generic','productNotGeneric', 'special', 'Not'));
-	container.append(this.buildCheckBox('Misc + Notes','productMiscWithNotes', 'special', 'Not'));
+	container.append(this.buildCheckBox('Prod Generic','productNotGeneric', 'special', 'Is'));
+	container.append(this.buildSimple('Misc + Notes','productMiscWithNotes', 'special', 'Requires Notes'));
 	
 	type.children(':input:checkbox').click();
 	scrap.children(':input:checkbox').click();
@@ -398,16 +419,36 @@ AssetCheck.prototype.checkAsset = function () {
 	this.checkProductIsNotGeneric(this.checkSpecialAsset('productNotGeneric'));
 	this.checkProductAndNotes(this.checkSpecialAsset('productMiscWithNotes'));
 	
-	if(this.error == true) return;
-	this.event.trigger('checked');
+	this.errorCheck('checked')
 }
 
 //This will probably be overwritten in the multi asset version. 
 AssetCheck.prototype.checkFailed = function (string) {
+	this.possibleError = true;
 	this.sound.play(500, "Bad");
-	setTimeout(function () {alert(string);}, 500);
-	this.error = true;
-// Will probably want a confimation of some sort for transfering to other locations.
+	setTimeout($.proxy(function () {this.checkAlert(string);},this), 500);
+}
+
+AssetCheck.prototype.checkAlert = function (string) {
+	var stop = confirm(string + '\nStop?');
+	if(stop == true) {
+		this.error = true; //This stops something from being transfered.
+		this.possibleError = false;
+	} else {
+		this.error = false;
+		this.possibleError = false;
+		this.event.trigger('gotErrorResult');
+	}	
+}
+
+AssetCheck.prototype.errorCheck = function (event) {
+	if(this.error) {
+		return;
+	} else if(this.possibleError) {
+		this.event.one('gotErrorResult',$.proxy(function () {this.errorCheck(event);},this));
+	} else {
+		this.event.trigger(event);
+	}
 }
 
 AssetCheck.prototype.checkSpecialAsset = function (name) {
@@ -515,7 +556,7 @@ AssetCheck.prototype.checkCPUType = function (el) {
 AssetCheck.prototype.checkProductIsNotGeneric = function (el) {
 	if(el.is(':checked')) {
 		var assetProduct = 	this.editAssetDiv.find('#editOrderlineProductSearchText' + getEditAssetID(this.editAssetDiv)).val();
-		if(el.parent().children('div').children(':checkbox').is(':checked') ^ assetProduct.indexOf("GENERIC") == -1) {
+		if(el.parent().children('div').children(':checkbox').is(':checked') ^ assetProduct.indexOf("GENERIC") != -1) {
 			this.checkFailed("The " + el.parent().children('span').html().toLowerCase() + ' check did not match.');
 			return false;
 		}

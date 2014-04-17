@@ -1,14 +1,10 @@
 ToDo:
 	High Priority
-		Rename Build + HD-Page. 
-		Move PO Specific commands in General to their own file. 
-		Remove Improved Page set.
-			Add alerts to the check, or remove check too.
-		Fix a listener in AssetCheck.
+		Fix a listener in AssetCheck.?
 		
 	Medium Priority
+		Split general and AssetCheck into more managable files. (PO for general).
 		Improved Location Page. (Basically boxing)
-		Give Asset(Or Form?) some kind of error checking.
 		Integrate a version of HD testing.
 			Save and new number focus and select ID field.
 			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
