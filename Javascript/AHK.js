@@ -28,27 +28,80 @@ var ahkInsertCondition = function(cond) {
 	break;
 	
 	case "Good Base":
-			$('input:radio[name="test16"]').eq(0).prop('checked', true);
-			$('input:radio[name="test13"]').eq(1).prop('checked', true);
-			$('input:radio[name="test14"]').eq(0).prop('checked', true);
+		$('input:radio[name="test16"]').eq(0).prop('checked', true);
+		$('input:radio[name="test13"]').eq(1).prop('checked', true);
+		$('input:radio[name="test14"]').eq(0).prop('checked', true);
 	break;
 	
 	case "Broken":
-			$('input:radio[name="test16"]').eq(1).prop('checked', true);
-			$('input:radio[name="test13"]').eq(0).prop('checked', true);
-			$('input:radio[name="test14"]').eq(0).prop('checked', true);
+		$('input:radio[name="test16"]').eq(1).prop('checked', true);
+		$('input:radio[name="test13"]').eq(0).prop('checked', true);
+		$('input:radio[name="test14"]').eq(0).prop('checked', true);
 	break;
 	
 	case "Damaged":
-			$('input:radio[name="test16"]').eq(1).prop('checked', true);
-			$('input:radio[name="test13"]').eq(1).prop('checked', true);
-			$('input:radio[name="test14"]').eq(0).prop('checked', true);
+		$('input:radio[name="test16"]').eq(1).prop('checked', true);
+		$('input:radio[name="test13"]').eq(1).prop('checked', true);
+		$('input:radio[name="test14"]').eq(0).prop('checked', true);
 	break;
 	
 	case "Low Grade":
-			$('input:radio[name="test16"]').eq(1).prop('checked', true);
-			$('input:radio[name="test13"]').eq(1).prop('checked', true);
-			$('input:radio[name="test14"]').eq(1).prop('checked', true);
+		$('input:radio[name="test16"]').eq(1).prop('checked', true);
+		$('input:radio[name="test13"]').eq(1).prop('checked', true);
+		$('input:radio[name="test14"]').eq(1).prop('checked', true);
+	break;
+	
+	case "HD Good":
+		$('input:radio[name="test2"]').eq(0).prop('checked', true);
+	break;
+	
+	case "HD Good Quick":
+		$('input:radio[name="test2"]').eq(0).prop('checked', true);
+		$('input:radio[name="test15"]').eq(0).prop('checked', true);	
+	break;
+	
+	case "HD Good All":
+		$('input:radio[name="test2"]').eq(0).prop('checked', true);
+		$('input:radio[name="test15"]').eq(0).prop('checked', true);	
+		$('input:radio[name="test10"]').eq(0).prop('checked', true);	
 	break;
 	}
+}
+
+
+function switchSize(id) {
+	ajaxCallback(replaceSize);
+	selectAsset(id);
+}
+
+
+function swapHDDConnector() {
+	swapProductName("IDE", "SATA");
+}
+
+function swapHDDFormFactor() {
+	swapProductName("3.5 IN", "LPTP");
+}
+
+function swapProductName(swap1, swap2) {
+	var item = $('#editOrderlineProductSearchText' + getEditAssetID()).val()
+	item = item.replace("GENERIC ","");
+	if(item.indexOf(swap1) > 0) {
+		item = item.replace(swap1, swap2);
+	} else if (item.indexOf(swap2) > 0 ) {
+		item = item.replace(swap2, swap1);
+	} else {
+		return;
+	}
+	
+	$('#editOrderlineProductSearchText' + getEditAssetID()).val(item);
+	ajaxCallback(clickNewAssetName);
+	$('#editOrderlineProductSearchText' + getEditAssetID()).trigger('keyup');
+}
+
+
+function clickNewAssetName() {
+	$('#editOrderlineProductSearchResults' + getEditAssetID() + " a").eq(0).click();
+	saveAsset(getEditAssetID());
+	//ajaxCallback();
 }

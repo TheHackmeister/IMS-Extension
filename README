@@ -1,9 +1,12 @@
 ToDo:
 	High Priority
 		Fix a listener in AssetCheck.?
+		Have option to turn off sound on checker.
+		Fix the way child assets are added.
 		
 	Medium Priority
 		Split general and AssetCheck into more managable files. (PO for general).
+		Consider a way of auto setting check settings.
 		Improved Location Page. (Basically boxing)
 		Integrate a version of HD testing.
 			Save and new number focus and select ID field.
@@ -24,7 +27,9 @@ ToDo:
 			Maybe I can have a precommand that says getSN. I get the SN, then I load it.
 		Consider making a laptop guesser. Could use AI
 		Have ability to turn off features.
-	
+
+loadForm('dailyreport.php', '', 'reports');
+		
 Features
 	Miscellaneous Usability
 		For POs, SOs, Returns, and Edit Assets, 
@@ -41,7 +46,7 @@ Features
 		Allows better flow for adding product to a PO
 			Selecting a product moves focus to SN. 
 			Pressing enter (Or scanning) while in the SN field moves the focus to the Location field.
-			When adding lines to a PO
+			When adding a line to a PO
 				Prints tag
 				Selects asset
 				Focus external asset number.
@@ -56,9 +61,10 @@ Features
 				
 	Improved Edit Asset Page
 		Lets you inspect and change assets without having to do the 4 clicks needed in the Edit Asset section.
+		Can automatically transfer checked assets to a location.
 			
 	Behind The Scenes 
-		Auto Update
+		Auto Updates
 		Alerts me when Brad changes function calls.
 		Has specific calls for the AutoHotKey program(barcodes) to tie into. 
 		Removed the backspace as a shortcut for the back button. It stops AutoHotKey from changing pages. 
