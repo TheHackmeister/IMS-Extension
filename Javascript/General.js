@@ -107,7 +107,7 @@ var goods_receipt_addAssetSearchProduct = function (event){
 } 
 
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.
-md5Function(goods_receipt_addLine, "goods_receipt_addLine", "b715613c9ede8cb4cab0e4370f6bde3e");
+md5Function(goods_receipt_addLine, "goods_receipt_addLine", "0417193737169515bd0ea61164dc1b01");
 //This is temporary until Brad removes the error on line 25.
 var goods_receipt_addLine = function(id){
     var product = document.getElementById('addAssetProductID').value;        
@@ -128,7 +128,7 @@ var goods_receipt_addLine = function(id){
     var desc = document.getElementById('addAssetProductSearchText').value;
     
     //var string = "product="+product+"&order="+order+"&qty="+qty+"&sn="+sn+"&location="+location+"&desc="+desc;
-	var string = "product="+product+"&order="+order+"&sn="+sn+"&desc="+desc + location + condition;
+	var string = "product="+product+"&order="+order+"&sn="+sn+"&qty="+"&desc="+desc + location + condition;
     var file = 'addorderline.php';
 
     ajax(string, file, function(response){
@@ -149,6 +149,7 @@ var goods_receipt_addLine = function(id){
 	    } 
     }, 'goods_receipt');
 } 
+
 
 var goods_receipt_addLineOld = goods_receipt_addLine;
 var goods_receipt_addLine = function() {

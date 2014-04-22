@@ -28,39 +28,35 @@ AssetController.prototype.selectAsset = function (id) {
     var string = "ID="+id
     var file = 'selectasset.php';
 
-	ajax(string, file, function(response){
-    	document.getElementById("editAssetForm").innerHTML = response;
+	ajax(string, file, $.proxy(function(response){
+		this.editAssetDiv.html("");
+    	this.editAssetDiv.html(response);
+		this.loadCallback("",id);
     	//showBreadcrumbNavIcon('edit', 'third');
-    }, 'assets');
+    },this), 'assets');
 }
 
 AssetController.prototype.load = function (id) {
 	if(typeof(id) == 'undefined' || typeof(id) == 'object') {
 		var id = this.getAssetID(id); 
 	} else {
+//Need to fix this?
 		this.setAssetID(id);
+		var id = id;
+		//return;
 	}
 	if(id == "") {
 		return;
 	}
 	var changedElements = this.changeDivs(this.editAssetDiv, "editAssetForm"); 
-	ajaxCallback.call(this,function(){this.loadCallback(changedElements, id);});
+	
 	//selectAsset(id); //New code forces me to use my own version. Mine simply removes the breadcrumb call.
 	this.selectAsset(id);
 }
 
 AssetController.prototype.loadCallback = function (changedElements, id) {
-	this.restoreDivs(changedElements);
 	this.select();
-	if(!this.checkLoaded(id)) {
-//Maybe have it set event of error, and an error object. When error occurs, event handler catches it and presents what is in the error object.
-		this.error = ["The item with the ID of " + id + " doesn't exist or has been deleted.", id];
-		this.event.trigger('error');
-		return;
-	} else {
-		this.event.trigger('loaded');
-		return;
-	}
+	this.checkLoaded(id);
 }
 
 AssetController.prototype.select = function () {
@@ -77,16 +73,44 @@ AssetController.prototype.handleError = function (error, id) {
 }
 
 AssetController.prototype.checkLoaded = function (currentID) {
-	var assetID = $("." + this.id + " #editAssetID").val();
+	var assetID = this.editAssetDiv.find('#editAssetID').val();
+
 	if(typeof(assetID) == 'undefined' || assetID != currentID) {
+		this.getIDFromSN(currentID);
 		return false;
-	} 
-	return assetID;
+ 	} else {
+		this.event.trigger('loaded');
+		return assetID;
+	}
+}
+
+//I don't overload, but have my own version.
+md5Function(searchAsset, "searchAsset", "50158f1dda9ac4a88fce91981ab9ac5c");
+AssetController.prototype.getIDFromSN = function (currentID) {
+    var file = 'searcheditassetsn.php';
+    var string = "string="+currentID+"&field=sn";
+
+    ajax(string, file, $.proxy(function(response){
+		this.getIDFromSNCallback(response);
+    }, this), 'assets');
+
+}
+
+AssetController.prototype.getIDFromSNCallback = function (response) {
+	var results = $(response).find('.id a');
+	if(results.length == 1) {
+		var id = results.html();
+		hideLoading();
+		this.load(id);
+	} else {
+		this.editAssetDiv.html("Could not load the asset.");
+	}
 }
 
 AssetController.prototype.setAssetID = function (id) {
 	this.asset.val(id);
-	this.event.trigger('changed');
+//	this.load();
+//	this.event.trigger('changed');
 }
 
 AssetController.prototype.getAssetID = function() {

@@ -18,7 +18,7 @@ var AssetCheck = function (id,controlDiv,soundObj) {
 	this.controlDiv.on('click', '.radioCheckbox', this.unsetRadio);
 	
 	this.event.on("loaded", $.proxy(this.stripSaveOnClick,this));
-	this.editAssetDiv.on('click', '[value="save"]' ,function () {saveAsset(getEditAssetID());this.select();});
+	this.editAssetDiv.on('click', '[value="save"]' , $.proxy(function () {saveAsset(getEditAssetID());this.select();}, this));
 }
 try {
 	AssetCheck.prototype = Object.create(AssetController.prototype);

@@ -1,30 +1,27 @@
 ToDo:
 	High Priority
-		Fix a listener in AssetCheck.?
-		Have option to turn off sound on checker.
 		Fix the way child assets are added.
-		
+
 	Medium Priority
-		Split general and AssetCheck into more managable files. (PO for general).
-		Consider a way of auto setting check settings.
-		Improved Location Page. (Basically boxing)
 		Integrate a version of HD testing.
 			Save and new number focus and select ID field.
 			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
+			Add extra set options. Add option to set what gets focused on load. Option between asset number, ebay auction, and notes.
+			Have option to turn off sound on checker. (Not just not using the checker). Or maybe this is a good way of doing it?
+		Split general and AssetCheck into more managable files. (PO for general).
 		Better eroor messages. Include what was expected and what was found.
+		Consider a way of auto setting check settings.
+				
 		
 	Low Priority
 		Make returns not change page. Add response to page, and remove in the same way so does.
 		If number is product, just do that product.
 			
 	Back burner
-		Create Ultimate transfer. 	
-		Hard Drive page - Pass all and save.
-		Boxing page
+		Create Ultimate transfer.
+		Improved Location Page. (Basically boxing)		
 		Check on location transfer. No asset should have more than 4 digits. 	
 		Add by SN to Return. 
-		Edit asset search by SN. Would have to split load into loadFromID and loadFromSN and pick the one at load. Also, loadFromSN first has to look up SN, then load that Asset.
-			Maybe I can have a precommand that says getSN. I get the SN, then I load it.
 		Consider making a laptop guesser. Could use AI
 		Have ability to turn off features.
 
@@ -62,6 +59,8 @@ Features
 	Improved Edit Asset Page
 		Lets you inspect and change assets without having to do the 4 clicks needed in the Edit Asset section.
 		Can automatically transfer checked assets to a location.
+		Alerts when an asset does not meet the check criteria. 
+		Searches by both asset id and sn.
 			
 	Behind The Scenes 
 		Auto Updates

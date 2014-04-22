@@ -2,7 +2,7 @@ var loadImprovedEditAsset = function () {
 	
 	var mainDiv = $('<div id="improvedAsset" class="improvedAsset" />');
 	var assetWrapper = $('<div id="editAssetWrapper" />');
-	var assetDiv = $('<div id="improvedAssetDiv" style="float:left; margin-right:195px;" />');
+	var assetDiv = $('<div id="improvedAssetDiv" style="float:left; margin-right:210px;" />');
 	var controlDiv = $('<div style="right:15px;position:absolute; width:160px;"> \
 			<div style="position:fixed;"> Enter Asset: <input type="text" id="improvedAssetID"> </div> \
 		</div>');
@@ -30,9 +30,10 @@ var AssetCheckSingle = function (id,controlDiv) {
 	
 	//Events.
 	this.event.on("keyup", $.proxy(function(event) {if(event.keyCode == 13 || event.keyCode == 10) this.load();},this));
+//	this.event.on('change', $.proxy(function(event) {this.load();},this));
 	this.event.on("loaded", $.proxy(function() {this.checkAsset();},this));
 	this.event.on('checked', $.proxy(function() {this.transfer();},this));
-	this.event.on("finished", $.proxy(function() {this.sound.play(150,'Good');},this));
+	this.event.on("finished", $.proxy(function() {if($('.assetCheck > input').is(':checked')) {this.sound.play(150,'Good');}},this));
 }
 try {
 	AssetCheckSingle.prototype = Object.create(AssetCheck.prototype);
