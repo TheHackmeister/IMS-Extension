@@ -25,7 +25,6 @@ ToDo:
 		Consider making a laptop guesser. Could use AI
 		Have ability to turn off features.
 
-loadForm('dailyreport.php', '', 'reports');
 		
 Features
 	Miscellaneous Usability
