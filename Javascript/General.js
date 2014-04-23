@@ -143,6 +143,12 @@ var goods_receipt_addLine = function(id){
 	         document.getElementById('addOrderlineResult').value = 'Asset Added';
 
 	         $('#orderlineTable').prepend(response);
+			 
+			//Begin add
+			ajaxCallback(addOrderLineListener);
+			$('a:contains(print)')[0].click();
+			$('#orderlineTable a')[0].click();
+			//End add
 	    } 
 	    else{
 	         document.getElementById("addOrderlineResult").innerHTML = response;
@@ -163,11 +169,6 @@ var addOrderLineListener = function() {
 		hideLoading();
 		return;
 	}
-	ajaxCallback(function(){addOrderLineListener2();});
-	$('a:contains(print)')[0].click();
-	$('#orderlineTable a')[0].click();
-};
-var addOrderLineListener2 = function () {
 	if($('#template' + getEditAssetID()).length > 0) {
 		$('a:contains(Templates:)').click();
 		$('#specTemplate' + getEditAssetID()).prop('checked', true);

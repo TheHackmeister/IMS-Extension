@@ -4,19 +4,18 @@ ToDo:
 
 	Medium Priority
 		Integrate a version of HD testing.
-			Save and new number focus and select ID field.
-			Should have checkbox and then have these enabled. I think this will be duplicated in Ultimate Transfer. 
 			Add extra set options. Add option to set what gets focused on load. Option between asset number, ebay auction, and notes.
 			Have option to turn off sound on checker. (Not just not using the checker). Or maybe this is a good way of doing it?
+				Option to only make sound. No alert.
+			Add extra set options.
 		Split general and AssetCheck into more managable files. (PO for general).
 		Better eroor messages. Include what was expected and what was found.
-		Consider a way of auto setting check settings.
-				
 		
 	Low Priority
 		Make returns not change page. Add response to page, and remove in the same way so does.
 		If number is product, just do that product.
-			
+		Consider a way of auto setting check settings.
+		
 	Back burner
 		Create Ultimate transfer.
 		Improved Location Page. (Basically boxing)		
