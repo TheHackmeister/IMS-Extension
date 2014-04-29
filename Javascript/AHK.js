@@ -34,9 +34,13 @@ var ahkInsertCondition = function(cond) {
 	break;
 	
 	case "Broken":
-		$('input:radio[name="test16"]').eq(1).prop('checked', true);
-		$('input:radio[name="test13"]').eq(0).prop('checked', true);
-		$('input:radio[name="test14"]').eq(0).prop('checked', true);
+		if($('input:radio[name="test2"]').length > 0) {
+			$('input:radio[name="test2"]').eq(1).prop('checked', true);
+		} else {
+			$('input:radio[name="test16"]').eq(1).prop('checked', true);
+			$('input:radio[name="test13"]').eq(0).prop('checked', true);
+			$('input:radio[name="test14"]').eq(0).prop('checked', true);
+		}
 	break;
 	
 	case "Damaged":

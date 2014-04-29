@@ -39,6 +39,7 @@ hideLoading = function (){
 }
 
 //Overloads the newWindow function. Adds clicking the print button on page load and adds a more useful count for the short report
+//As of 4/29/14 Brad broke newWindow 
 md5Function(newWindow, "newWindow", "f9910d0afe84fac4a58824b891fc8f92");
 var newWindow = function (string, file, plugin, print){   
     var code = '';
@@ -87,6 +88,19 @@ var newWindow = function (string, file, plugin, print){
         }
     });
 } 
+
+//Adds the improved pages after when core_loadMenus is called.
+md5Function(core_loadMenus, "core_loadMenus", "388087d1ac18f19fd0feef8f4eab2c3c");
+var core_loadMenus = function () {
+    var string = '';
+    var file = 'menus.php';
+
+    ajax(string, file, function(response){
+        $('body').html(response);
+		setupIMS(); //Added
+    }, 'core');
+
+}
 
 //Create a replacement function for the AHK program. 
 md5Function(goods_receipt_addAssetSelectProduct, "goods_receipt_addAssetSelectProduct", "f73794d7c2c01f8fd9091f6d6cc6b870");
@@ -145,7 +159,6 @@ var goods_receipt_addLine = function(id){
 	         $('#orderlineTable').prepend(response);
 			 
 			//Begin add
-			ajaxCallback(addOrderLineListener);
 			$('a:contains(print)')[0].click();
 			$('#orderlineTable a')[0].click();
 			//End add
@@ -161,8 +174,24 @@ var goods_receipt_addLineOld = goods_receipt_addLine;
 var goods_receipt_addLine = function() {
 	window.skipHide = true;
 	$('#addOrderlineResult').html("");
-	ajaxCallback(addOrderLineListener);
 	goods_receipt_addLineOld.apply(this,arguments);
+}
+
+md5Function(editOrderline, 'editOrderline', "1216128b9d9d6d37a1badd69cbf3f9ea");
+var editOrderline = function (id, e){
+    var row = $(e).closest("tr")[0];
+
+    var string = "ID="+id;
+
+    $("tr").removeClass('selected');
+    $(row).addClass('selected');
+    var file = 'selectasset.php';
+
+    ajax(string, file, function(response){
+    	document.getElementById("editOrderlineDetail").innerHTML = response;
+    	showBreadcrumbNavIcon('edit', 'fifth');
+		addOrderLineListener();
+    }, 'assets');	
 }
 var addOrderLineListener = function() {
 	if($('#addOrderlineResult').eq(0).html() != "") {

@@ -1,15 +1,23 @@
 ToDo:
 	High Priority
-		Fix the way child assets are added.
+		Integrate a version of HD testing.
+			Make options section.
+				add option to set what gets focused on load. Option between asset number, ebay auction, and notes.
+				Mandate checking if setting. Has to have correct specs/tests.
+				Print sticker.
+				Move no alert to this section.
+			Add extra set options.
+				Have error for setting specs and tests. Has been setup. 
+					Need to figure out how to stop after the error has happened.
+				CPU (Rewrite brads code here)
+				Product
+		Split general and AssetCheck into more managable files. (PO for general).
+		Better error messages. Include what was expected and what was found.
 
 	Medium Priority
-		Integrate a version of HD testing.
-			Add extra set options. Add option to set what gets focused on load. Option between asset number, ebay auction, and notes.
-			Have option to turn off sound on checker. (Not just not using the checker). Or maybe this is a good way of doing it?
-				Option to only make sound. No alert.
-			Add extra set options.
-		Split general and AssetCheck into more managable files. (PO for general).
-		Better eroor messages. Include what was expected and what was found.
+		Fix the way child assets are added.
+		Should remove added assets after being added to SO.
+		Removing asset from SO doesn't seem to work.
 		
 	Low Priority
 		Make returns not change page. Add response to page, and remove in the same way so does.
@@ -36,6 +44,7 @@ Features
 		Short report includes a count by item description. 
 		Printing automatically pops up the print window, includes a way for the AutoHotKey program to tie in, and closes after printing.
 		Has option to immediately add scanned assets to a SO. 
+		When managing a location and only one comes up in the search, it is selected automatically.
 
 	POs
 		Allows better flow for adding product to a PO
@@ -56,10 +65,15 @@ Features
 				
 	Improved Edit Asset Page
 		Lets you inspect and change assets without having to do the 4 clicks needed in the Edit Asset section.
+		Can automatically set asset specs or tests.
 		Can automatically transfer checked assets to a location.
 		Alerts when an asset does not meet the check criteria. 
 		Searches by both asset id and sn.
-			
+	
+	Short Report
+		Gives a count for each product. 
+			The same product with different conditions gets put into seperate counts.
+	
 	Behind The Scenes 
 		Auto Updates
 		Alerts me when Brad changes function calls.

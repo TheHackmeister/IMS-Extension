@@ -23,7 +23,7 @@ var countInLocation = function () {
 	var productArray = new Array();//[index][text|number]
 
 	this.$('.line').each(function(i, obj) {
-		product = $(this).find(".item:eq(1)").html();
+		product = $(this).find(".item:eq(1)").html() + " (" + $(this).find(".item:eq(4)").html() + ")";
 		
 		if(i == 1) {
 			var newProduct = new Array();
@@ -47,9 +47,10 @@ var countInLocation = function () {
 			productArray.push(newProduct);
 		}
 	});
-		
-	productArray = findAndRemove(productArray,"DESC");
-	productArray = findAndRemove(productArray,null);
+	
+	//These remove the extra stuff.
+	productArray = findAndRemove(productArray,"DESC (CONDITION)");
+	productArray = findAndRemove(productArray,"null (null)");
 	productArray.sort();
 
 	var arrayS = "";

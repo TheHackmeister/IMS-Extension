@@ -31,29 +31,6 @@ var deleteReturnline = function () {
 }
 */
 
-//This disables the alert Brad annoyingly calls.
-md5Function(addReturnlineAsset,"addReturnlineAsset", "ada5cc0035825242367af4f6805ff464");
-var addReturnlineAsset = function (order) {
-	var asset = document.getElementById('addReturnlineAssetTag').value;
-    var location = document.getElementById('addReturnlineLocation').value;
-    
-    var string = "order="+order+"&asset="+asset+"&location="+location;
-    var file = 'addreturnlineasset.php';   
-
-    ajax(string, file, function(response){
-//	    alert(response);
-        if(response != "Re-enter location key"){
-            document.getElementById('addReturnlineAssetTag').value = '';
-            document.getElementById('addReturnlineLocation').value = '';
-            table = document.getElementById('returnlineTable');
-            $(table).append(response);
-        }
-        else{
-             document.getElementById("addOrderLineResult").innerHTML = response;
-        }
-    }, 'returns');
-}
-
 var reorganizeReturns = function () {
 	if(typeof($('#addReturnTextarea').val()) != 'undefined') return;
 	

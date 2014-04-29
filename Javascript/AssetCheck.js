@@ -16,6 +16,7 @@ var AssetCheck = function (id,controlDiv,soundObj) {
 		
 	this.controlDiv.on('click', '.option', this.toggleVisible);
 	this.controlDiv.on('click', '.radioCheckbox', this.unsetRadio);
+	this.controlDiv.on('keyup', '.searchList', this.searchProductOrCPU);
 	
 	this.event.on("loaded", $.proxy(this.stripSaveOnClick,this));
 	this.editAssetDiv.on('click', '[value="save"]' , $.proxy(function () {saveAsset(getEditAssetID());this.select();}, this));
@@ -112,6 +113,34 @@ AssetCheck.prototype.buildTextBox = function (specName,specNumber, special) {
 	return el;
 }
 
+AssetCheck.prototype.buildSearchList = function (specName,specNumber, special) {
+	var el = $('<div/>');
+	var titleCheckbox = $('<input type="checkbox"/>')
+	titleCheckbox.addClass("option");
+	special = special || false;
+	var spec = $('<div/>').hide();
+//Maybe remove class for these?
+	var textbox = $('<input type="text" class="searchList" name="' + specNumber + '" value=""/>');
+	var hidden = $('<input type="hidden" class="inputOption" name="' + specNumber + 'Hidden" value=""/>');
+	var results = $('<div name="' + specNumber + 'Results" />');
+	var name = $('<span/>').html(specName);
+	
+	if(special) {
+		spec.addClass("special");
+		textbox.css('direction','rtl');
+	}
+	
+	el.append(titleCheckbox);
+	el.append(name);	
+	spec.append(hidden);	
+	spec.append(textbox);	
+	spec.append(results);	
+	el.append(spec);
+	
+	return el;
+}
+
+
 AssetCheck.prototype.buildCheckBox = function (specName,specNumber, special, text) {
 	var el = $('<div/>');
 	text = text || "Checked";
@@ -184,7 +213,8 @@ AssetCheck.prototype.buildCheckList = function (event) {
 	var shipped = this.buildCheckBox('Shipped','Shipped', 'special');
 	var type = this.buildOption('Type',this.buildOptionType, 'special');
 	
-	container.append(this.buildTextBox('Product','Product', 'special'));
+	container.append(this.buildSimple('Auto stop on error','stopOnError', 'special', 'No popup'));
+	container.append(this.buildSearchList('Product','Product', 'special'));
 	container.append(type);
 	container.append(scrap); 
 	container.append(shipped); 
@@ -211,10 +241,10 @@ AssetCheck.prototype.buildSetList = function () {
 	}
 	
 //	container.append(this.buildTextBox('Product','Product'));
-//	container.append(this.buildContainer('checkSpecs','Specs', this.buildSpecs));
-//	container.append(this.buildContainer('checkTests','Tests', this.buildTests));
-	container.append(this.buildTextBox('Location','Location'));
-//	container.append(this.buildTextBox('Sales Order','Sales Order'));
+	container.append(this.buildContainer('setSpecs','Specs', this.buildSpecs));
+	container.append(this.buildContainer('setTests','Tests', this.buildTests));
+	container.append(this.buildTextBox('Location','Location', 'special'));
+	container.append(this.buildTextBox('Sales Order','salesOrder', 'special'));
 }
 
 AssetCheck.prototype.buildSpecs = function (event) {
@@ -224,7 +254,7 @@ AssetCheck.prototype.buildSpecs = function (event) {
 		return;
 	}
 	
-	container.append(this.buildTextBox("CPU Type","spec6", 'special'));
+	container.append(this.buildSearchList("CPU Type","spec6", 'special'));
 	container.append(this.buildTextBox("CPU Speed","spec5"));
 	container.append(this.buildOption("RAM",this.buildOptionRam));
 	container.append(this.buildTextBox("Screen Size","spec3"));
@@ -385,6 +415,48 @@ AssetCheck.prototype.buildOptionCondition = function () {
 			</select>');
 }
 
+
+
+
+
+
+AssetCheck.prototype.searchOption = function (el) {
+	el = $(el);
+	//Product
+	var text = el.val();
+	var product = ""; //I don't think I need this. Why would a product be needed for a product search?
+	var asset = this.asset.val();
+	
+	var string = 'string='+el.val()+'&product='+product+"&asset="+asset;
+    var file = 'editassetsearchproduct.php';
+
+    ajax(string, file, function(response){
+    	el.parent().find('.results').html(response)
+    }, 'assets');
+
+	//CPU
+	var id = '6';
+	var string = "ID="+id+"&value="+text+"&asset="+asset;
+    var file = 'searchorderlinespec.php';
+ 
+    if(text != ''){
+        ajax(string, file, function(response){
+            document.getElementById("searchOrderlineSpecResults"+id).innerHTML = response;
+        }, 'goods_receipt');
+    }else{
+       el.parent().find('.results').html('');
+    }
+
+	
+}
+
+md5Function(editAssetSelectProduct, "editAssetSelectProduct", "587959341153fd8f3834f440dc8cd753");
+AssetCheck.prototype.selectOption = function (id, asset, el) {
+    el.parent().parent().find('input').val(e.innerHTML);
+	el.parent().parent().find('.hidden').val(id);
+	el.parent().html('');
+}
+
 //These handle the checking
 AssetCheck.prototype.checkAsset = function () {
 	this.error = false;
@@ -426,7 +498,12 @@ AssetCheck.prototype.checkAsset = function () {
 AssetCheck.prototype.checkFailed = function (string) {
 	this.possibleError = true;
 	this.sound.play(500, "Bad");
-	setTimeout($.proxy(function () {this.checkAlert(string);},this), 500);
+	if(this.checkSpecialAsset('stopOnError').is(':checked')) {
+		this.error = true;
+		this. possibleError = false;
+	} else {
+		setTimeout($.proxy(function () {this.checkAlert(string);},this), 500);
+	}
 }
 
 AssetCheck.prototype.checkAlert = function (string) {
@@ -446,8 +523,10 @@ AssetCheck.prototype.errorCheck = function (event) {
 		return;
 	} else if(this.possibleError) {
 		this.event.one('gotErrorResult',$.proxy(function () {this.errorCheck(event);},this));
+		return false;
 	} else {
 		this.event.trigger(event);
+		return false;
 	}
 }
 
@@ -499,7 +578,7 @@ AssetCheck.prototype.checkText = function (el) {
 
 AssetCheck.prototype.checkProduct = function (el) {
 	if(el.is(':checked')) {
-		var expected = el.parent().children('div').children(':input').val();
+		var expected = el.parent().children('div').children('.searchList').val();
 		var assetProduct = 	this.editAssetDiv.find('#editOrderlineProductSearchText' + getEditAssetID(this.editAssetDiv)).val();
 		if(expected.toLowerCase() != assetProduct.toLowerCase()) {
 			this.checkFailed("The " + el.parent().children('span').html().toLowerCase() + ' check did not match.');
@@ -676,6 +755,44 @@ AssetCheck.prototype.getCPUByName = function (cpuName) {
 	
 	return result;
 }
+
+//I create my own rather than use Brads and deal with renaming elements. 
+//md5Function(goods_receipt_addAssetSearchProduct, "goods_receipt_addAssetSearchProduct", "");
+//This has already been checked.
+AssetCheck.prototype.searchProductOrCPU = function (el) {
+//This may need to be el.target.
+	el = $(el);
+	el.parent().find('input:hidden').val("");
+    var string = "string="+el.val();
+    
+    //key up
+    if(el.keyCode == 38){
+//May need to fix this also, should not be repeated 3 times..
+        var current = el.parent().find('div li.selected');
+        current.removeClass('selected');
+        current.prev().addClass('selected');
+    //key down
+    }else if(el.keyCode == 40){
+        var current = el.parent().find('div li.selected');
+        current.removeClass('selected');
+        current.next().addClass('selected');
+    //return    
+    }else if(el.keyCode == 13){      
+        el.parent().find('div li.selected').trigger('click');
+
+    }else{      
+        if(el.val() != ''){
+            var file = 'addassetproductsearch.php';
+    
+            ajax(string, file, function(response){
+                el.parent().find('.results').html(response);
+            }, 'goods_receipt');
+    
+        }else{
+             el.parent().find('.results').html("");
+        }
+    }    
+} 
 
 AssetCheck.prototype.cpuArray = [["71", "AMD ATHLON 4", "Pentium 3", "AMD"],
 ["77", "AMD ATHLON 64", "Pentium 4", "AMD"],

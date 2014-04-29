@@ -182,7 +182,7 @@
 var md5Function = function (func, funcName, md5String) {
 	var funcString = func.toString();
 	if(md5String != md5(funcString)) {
-		console.log("The " + funcName + " function has changed" );
+		console.log("The " + funcName + " function has changed. \nOriginal md5: " + md5String + "\nNew md5: " + md5(funcString));
 	}
 }
 
