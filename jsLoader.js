@@ -12,6 +12,7 @@ addToPage("Javascript\\SetupIMS.js");
 //General Use.
 addToPage("Javascript\\InputForm.js");
 addToPage("Javascript\\General.js");
+addToPage("Javascript\\PO.js");
 addToPage("Javascript\\Listeners.js");
 addToPage("Javascript\\Count-In-Location.js");
 addToPage("Javascript\\SalesOrder.js");
@@ -23,6 +24,9 @@ addToPage("Javascript\\Assets.js");
 addToPage("Javascript\\Returns.js");
 addToPage("Javascript\\AssetCheck.js"); //Depends on AssetController.
 addToPage("Javascript\\ImprovedEditAsset.js"); //Depends on AssetCheck.
+addToPage("Javascript\\IEABuild.js");
+addToPage("Javascript\\IEACheck.js");
+addToPage("Javascript\\IEASet.js");
 
 
 //addToPage("Javascript\\Boxing-CreateLoc.js");
