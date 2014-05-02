@@ -49,9 +49,11 @@ $(window).keydown(function(event) {
   if(event.shiftKey && event.ctrlKey && event.keyCode == 89) {
 		ScriptSearchRunJS()
 		event.preventDefault(); 
+		window.lastFocused = "";
 		return;
   }
   if(event.ctrlKey && event.keyCode == 89) { 
+	window.lastFocused = $(document.activeElement);
     document.getElementById("ScriptSearchTextArea").focus()
     event.preventDefault(); 
   }

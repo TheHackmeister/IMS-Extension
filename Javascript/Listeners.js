@@ -16,7 +16,14 @@ $('body').on('change', "#searchOrderText", function() {$('[value="search"]').cli
 $('body').on('change', "#searchAssetText", function() {$('[value="search"]').click();});
 $('body').on('change', "#searchLocationText", function() {$('[value="search"]').click();});
 
-$('body').on('change', "#addOrderlineSN", function() {$('#addOrderlineLocation').focus();});
+//$('body').on('change', "#addOrderlineSN", function() {$('#addOrderlineLocation').focus();});
+$('body').on('change', "[placeholder='SN']", function() {$(this).parent().parent().find('[placeholder="location"]').focus();});
+
+$('body').on('click', '#editOrderlineDetailChild input[value="save"]', function() {scrollWindow('fifth');}); 
+$('body').on('click', 'h6:contains(Children)', function() {$(this).parent().parent().find('input:eq(1)').select();});
+
+
+
 
 var clickTopListener = function (e) {
 	if(e.keyCode == 10 || e.keyCode == 13) {

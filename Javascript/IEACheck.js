@@ -57,6 +57,7 @@ AssetCheck.prototype.checkAlert = function (string) {
 	if(stop == true) {
 		this.error = true; //This stops something from being transfered.
 		this.possibleError = false;
+		this.selectID();
 	} else {
 		this.error = false;
 		this.possibleError = false;

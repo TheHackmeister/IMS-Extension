@@ -35,7 +35,7 @@ var reorganizeReturns = function () {
 	if(typeof($('#addReturnTextarea').val()) != 'undefined') return;
 	
 	//This moves around the elements.
-	$('h6:contains(Location Key)').insertBefore('h6:contains(Asset ID)');
+	$('h6:contains(Location Key)').eq(0).insertBefore('h6:contains(Asset ID)');
 	$('#addReturnlineLocation').insertBefore('h6:contains(Asset ID)');
 	$('<textarea id="addReturnTextarea" rows="15">').insertAfter('#addReturnlineAssetTag');
 	$('<input type="text" id="addReturnLocation">').insertBefore('h6:contains(Asset ID)')

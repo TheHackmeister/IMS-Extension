@@ -10,8 +10,14 @@ var ahkInsertCPUType = function (cpuid, text) {
 }
 
 var ahkInsertLocationAndEnterOrderLine = function (loc) {
-	$('#addOrderlineLocation').val(loc); 
-	$('input:button[value="add line"]')[0].click();
+	var lastFocused = window.lastFocused;
+	if(lastFocused.isChildOf('#editAssetChildrenWrapper')) {
+		lastFocus.parent('#editAssetChildrenWrapper').find('[placeholder="location"]').val(loc);
+		lastFocus.parent('#editAssetChildrenWrapper').find('input[value="create"]').click();
+	} else {
+		$('#addOrderlineLocation').val(loc); 
+		$('input:button[value="add line"]')[0].click();
+	}
 }
 
 var ahkInsertCondition = function(cond) {

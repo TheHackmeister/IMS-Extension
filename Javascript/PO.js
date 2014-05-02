@@ -54,15 +54,18 @@ var goods_receipt_addLine = function(id){
              $('#addAssetOrderlineConditionDropDown').val('NULL');
 	         document.getElementById('addOrderlineResult').value = 'Asset Added';
 
+			 var response = $(response);
+			 
 	         $('#orderlineTable').prepend(response);
 			 
 			//Begin add
-			$('a:contains(print)')[0].click();
-			$('#orderlineTable a')[0].click();
+			response.find('a:contains(print)')[0].click();
+			response.find('a')[0].click();
 			//End add
 	    } 
 	    else{
 	         document.getElementById("addOrderlineResult").innerHTML = response;
+			 hideLoading();
 	    } 
     }, 'goods_receipt');
 } 
@@ -111,7 +114,7 @@ var addOrderLineListener = function() {
 
 
 //Returns true if actions should be stopped. False if actions should continue.
-var checkEAN = function () {
+var checkEAN = function (id) {
 	var po = getPONumber();
 	var check = true; 
 	var wrapper = function () {
@@ -124,10 +127,12 @@ var checkEAN = function () {
 		
 		var stop = false;	
 		var error = false;
-		if($('#editOrderlineExternalAsset').val() == "") {
+		var parent = $('h5:contains(ASSET: ' + id + ')').parent().parent().parent();
+		
+		if(parent.find('#editOrderlineExternalAsset').val() == "") {
 			stop = confirm("You have not entered an external asset number. Stop and fix?");
 			error = true;
-		} else if($('#editOrderlineExternalCondition' + getEditAssetID()).val() == "") {
+		} else if(parent.find('#editOrderlineExternalCondition' + getEditAssetID()).val() == "") {
 			stop = confirm("The external asset number is either wrong or you are in the wrong PO. Stop and fix?");
 			error = true;
 		}
@@ -147,3 +152,59 @@ var checkEAN = function () {
 	checkEAN = wrapper;
 	return wrapper();
 }
+
+//Below here is for adding child assets.
+md5Function(addChildSelectProduct,"addChildSelectProduct", "036843197dd709d7e14f3a66d3ac1ef5");
+var addChildSelectProductOld = addChildSelectProduct;
+var  addChildSelectProduct = function () {
+	$(arguments[1]).closest('#editAssetChildren').find('[placeholder="SN"]').select();
+	addChildSelectProductOld.apply(this, arguments);
+}
+
+md5Function(addChildAsset,"addChildAsset", "1e8aaa4d4f24caedcfc13bcc43f319be");
+var addChildAsset = function (id){
+	window.skipHide(); //Added
+    var asset = id;        
+    var product = document.getElementById('addChildProductID'+id).value;
+    var qty = document.getElementById('addChildqty'+id).value;
+    var sn = document.getElementById('addChildSN'+id).value;
+    var desc = document.getElementById('addChildSearchProductText'+id).value;
+
+    var location = ''
+    if($('#addChildLocation'+id).length > 0){
+        location = "&location="+$('#addChildLocation'+id).val();
+    }
+    
+    var string = "product="+product+"&asset="+asset+"&sn="+sn+"&desc="+desc+"&qty="+qty+location;
+    var file = 'addchild.php';
+
+    ajax(string, file, function(response){
+        if(string.indexOf('Re-enter location key') == -1){ //I changed this
+            document.getElementById('addChildProductID'+id).value = '';
+            document.getElementById('addChildSN'+id).value = '';
+            document.getElementById('addChildSearchProductText'+id).value = '';
+            document.getElementById('addChildResults'+id).innerHTML = '';
+            
+            table = document.getElementById('editAssetChildTable'+id);
+            //var rowCount = table.rows.length;
+            //var row = table.insertRow(1);
+            //row.className = "line";
+
+			var response = $(response);//Added
+			
+            //row.innerHTML = response;
+            $(table).append(response);
+					 
+			//Begin add
+			response.find('a:contains(print)')[0].click();
+			response.find('a')[0].click();
+			//End add
+			
+        }
+        else{
+            document.getElementById('addChildResults'+id).innerHTML = response;
+			hideLoading(); //Added
+        }
+    }, 'assets');
+} 
+

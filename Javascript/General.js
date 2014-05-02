@@ -40,7 +40,7 @@ hideLoading = function (){
 
 //Overloads the newWindow function. Adds clicking the print button on page load and adds a more useful count for the short report
 //As of 4/29/14 Brad broke newWindow 
-md5Function(newWindow, "newWindow", "f9910d0afe84fac4a58824b891fc8f92");
+md5Function(newWindow, "newWindow", "a37dc9383d21af82330060ad8ca1bcd9 ");
 var newWindow = function (string, file, plugin, print){   
     var code = '';
 
@@ -120,7 +120,7 @@ var saveAssetListener = function (asset,id) {
 		//If we're not adding to a PO, don't lock condition. 
 		if($('h5:contains(Grading/Receiving)').length < 1) return;
 
-		if(checkEAN()) return;
+		if(checkEAN(asset)) return;
 		
 		saveAssetCondition(asset);		
 		scrollWindow("fourth");

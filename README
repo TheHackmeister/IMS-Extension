@@ -1,29 +1,25 @@
 ToDo:
 	High Priority
-		
+		Test
+			Adding assets
+				Child assets
+			Saving child assets
+			Print Orderline with AHK
+			Check EAN. (For child assets, but probably wont apply)
+			
 	Medium Priority	
-		Fix the way child assets are added.
-			Maybe on expand, focus the product field. 
-			Auto set location based on parent?
-			Have enter submit? 
-			Add child
-				Click Print.
-				Click to load.
-			Load
-				Strip save
-				Custom save move to edit asset or closes child asset window.
-				
-		Should remove added assets after being added to SO.
-		Removing asset from SO doesn't seem to work.
-		
+			
 	Low Priority
-		Improved Edit Asset: Mandate having some king of check if setting?
-		Make returns not change page. Add response to page, and remove in the same way so does.
 		If number is product, just do that product.
 		Consider a way of auto setting check settings.
-		
+		Removing asset from SO doesn't seem to work.
+		Have popup about alerting everyone of the barcode scanner.
+		Make returns not change page. Add response to page, and remove in the same way so does.	
+		Should remove added assets after being added to SO.
+	
 	Back burner
 		Create Ultimate transfer.
+		Improved Edit Asset: Mandate having some king of check if setting?
 		Improved Location Page. (Basically boxing)		
 		Check on location transfer. No asset should have more than 4 digits. 	
 		Add by SN to Return. 
@@ -54,6 +50,12 @@ Features
 				Focus external asset number.
 			Save automatically locks the condition and focuses the product field. 	
 		Checks EAN both for correctness and existence. 
+		Adding Child assets
+			Expanding the box focuses the product field.
+			Selecting a product focuses the SN field.
+			Entering a SN focuses the Location field.
+			Automatically prints and expands added child assets.
+			Goes to parent asset on save. 
 			
 	Returns
 		More normal transfer boxes
