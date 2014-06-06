@@ -49,11 +49,16 @@ $(window).keydown(function(event) {
   if(event.shiftKey && event.ctrlKey && event.keyCode == 89) {
 		ScriptSearchRunJS()
 		event.preventDefault(); 
+		window.oldLastFocused = window.lastFocused;
 		window.lastFocused = "";
 		return;
   }
   if(event.ctrlKey && event.keyCode == 89) { 
-	window.lastFocused = $(document.activeElement);
+	if(window.oldLastFocused && $(document.activeElement).attr('id') == "ScriptSearchTextArea") {
+		window.lastFocused = window.oldLastFocused;
+	} else {
+		window.lastFocused = $(document.activeElement);
+	}
     document.getElementById("ScriptSearchTextArea").focus()
     event.preventDefault(); 
   }

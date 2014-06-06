@@ -146,7 +146,7 @@ AssetCheck.prototype.checkAssetType = function (el) {
 		else if(this.editAssetDiv.find('[name="spec4"]').length > 0) type = "desktop"; //Form Factor
 		else if(this.editAssetDiv.find('[name="spec30"]').length > 0) type = "monitor"; //Brand 
 		else if(this.editAssetDiv.find('[name="spec13"]').length > 0) type = "hdd"; // HD Type
-		else if(this.editAssetDiv.find('[name="spec16"]').length > 0) type = "mp3"; //WIFI
+		else if(this.editAssetDiv.find('[name="test8"]').length > 0) type = "mp3"; //WIFI
 		else type = "other";
 		var value = el.parent().children('div').children('select').val(); 
 		

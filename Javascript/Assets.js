@@ -54,6 +54,36 @@ AssetController.prototype.load = function (id) {
 	this.selectAsset(id);
 }
 
+AssetController.prototype.loadNoCallback = function (id) {
+	if(typeof(id) == 'undefined' || typeof(id) == 'object') {
+		var id = this.getAssetID(id); 
+	} else {
+//Need to fix this?
+		this.setAssetID(id);
+		var id = id;
+		//return;
+	}
+	if(id == "") {
+		return;
+	}
+	//var changedElements = this.changeDivs(this.editAssetDiv, "editAssetForm"); 
+	
+	//selectAsset(id); //New code forces me to use my own version. Mine simply removes the breadcrumb call.
+	this.selectAssetNoCallback(id);
+}
+
+AssetController.prototype.selectAssetNoCallback = function (id) {
+    var string = "ID="+id
+    var file = 'selectasset.php';
+
+	ajax(string, file, $.proxy(function(response){
+		this.editAssetDiv.html("");
+    	this.editAssetDiv.html(response);
+		//this.loadCallback("",id);
+    	//showBreadcrumbNavIcon('edit', 'third');
+    },this), 'assets');
+}
+
 AssetController.prototype.loadCallback = function (changedElements, id) {
 	this.select();
 	this.checkLoaded(id);

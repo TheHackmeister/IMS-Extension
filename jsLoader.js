@@ -21,7 +21,7 @@ addToPage("Javascript\\AHK.js");
 
 // Depends on Input Form.
 addToPage("Javascript\\Assets.js");
-addToPage("Javascript\\Returns.js");
+//addToPage("Javascript\\Returns.js"); // Brad replaced.
 addToPage("Javascript\\AssetCheck.js"); //Depends on AssetController.
 addToPage("Javascript\\ImprovedEditAsset.js"); //Depends on AssetCheck.
 addToPage("Javascript\\IEABuild.js");
@@ -39,12 +39,13 @@ chrome.storage.sync.get("SautoAddToSO", function (retVal) {
 		addToPage("Javascript\\Shipping.js");		
 	}
 });
-
+/*
 chrome.storage.sync.get("SunsetReturns", function (retVal) {
     if(retVal.SunsetReturns == false) {
 		addToPage("Javascript\\Return-Option.js");		
 	}
 });
+*/
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");
 //addToPage("Javascript\\.js");

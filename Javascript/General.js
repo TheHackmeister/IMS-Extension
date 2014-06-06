@@ -40,7 +40,7 @@ hideLoading = function (){
 
 //Overloads the newWindow function. Adds clicking the print button on page load and adds a more useful count for the short report
 //As of 4/29/14 Brad broke newWindow 
-md5Function(newWindow, "newWindow", "a37dc9383d21af82330060ad8ca1bcd9 ");
+md5Function(newWindow, "newWindow", "a37dc9383d21af82330060ad8ca1bcd9");
 var newWindow = function (string, file, plugin, print){   
     var code = '';
 
@@ -68,7 +68,9 @@ var newWindow = function (string, file, plugin, print){
 				wnd.document.close();
 				wnd.onload = function( ) {
 					wnd.document.title = 'Print Ready';
-					wnd.printWindow();
+					//I have timeout to stop the print window from interfearing with the beep. Should help, but may not fix %100. 
+					window.setTimeout(function() {wnd.printWindow();}, 250);
+					//wnd.setTimout(function() {alert(window);}, 25);
 				}
 			} else if (file == 'assetcountbylocationshortprocess.php') {
 				wnd.document.close();
@@ -79,7 +81,16 @@ var newWindow = function (string, file, plugin, print){
 				wnd.onload = function () {
 					wnd.countInLocation();
 				}
-			}			
+			} else if (file == 'assetcountbylocationprocess.php' || file == 'assetcountbylocationprocess-groupbyasset.php') {
+				wnd.document.close();
+				wnd.Array.prototype.remove = Array.prototype.remove;
+				wnd.findAndRemove = findAndRemove;
+				wnd.countInLocationDetailed = countInLocationDetailed;
+
+				wnd.onload = function () {
+					wnd.countInLocationDetailed();
+				}
+			}
 			//End add
         },
         error: function(xhr, status, error) {
@@ -109,7 +120,7 @@ function getEditAssetID(assetDiv) {
 
 //Automatically locks a PO when saved. Also sets focus to the product description box after save.
 //Also makes sure there is an external ID.
-md5Function(saveAsset,"saveAsset", "e30397ccef9924fe928eee9758b52b28");
+md5Function(saveAsset,"saveAsset", "7ec27f3cfdcdb3ec8a189aa501d97d1b");
 var saveAssetOld = saveAsset;
 var saveAsset = function(asset) {
 	var id = "editOrderlineResult" + arguments[0];
@@ -123,8 +134,32 @@ var saveAssetListener = function (asset,id) {
 		if(checkEAN(asset)) return;
 		
 		saveAssetCondition(asset);		
-		scrollWindow("fourth");
-		$('#addAssetProductSearchText').focus();    
+		scrollAfterSave(asset);
+		if($('#persistAssetInfo').is(':checked')) {
+			 $('#addOrderlineSN').focus();
+		} else {
+			$('#addAssetProductSearchText').focus();    
+		}
+}
+
+var scrollAfterSave = function (asset) {
+	var assetDiv = $('h5:contains(ASSET: ' + asset + ')');
+	var poOrEdit = assetDiv.closest('.pluginBody').attr('id');
+	var childAsset = (assetDiv.parents('#editOrderlineDetailChild').length > 0);
+	
+	if(poOrEdit == 'orderWrapper'){
+		if(childAsset) {
+			scrollWindow('fifth');
+		} else {
+			scrollWindow('fourth');
+		}
+	}else if(poOrEdit == 'editAssetWrapper'){
+		if(childAsset) {
+			scrollWindow('third');
+		} else {
+			scrollWindow('first');
+		}    	
+	}
 }
 
 var getPONumber = function() {

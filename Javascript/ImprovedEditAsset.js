@@ -38,7 +38,7 @@ var AssetCheckSingle = function (id,controlDiv) {
 	this.event.on('checked', $.proxy(function() {this.checkPrintTag(this.getOption('printTag'));}, this));
 	
 	this.event.on('saveReady', $.proxy(function() {this.save();},this));
-	this.event.on('saved', $.proxy(function() {this.transfer();},this));
+	this.event.on('saved', $.proxy(function() {this.transferOrReturn();},this));
 	this.event.on('transfered', $.proxy(function() {this.addToSO();},this));
 	this.event.on("finished", $.proxy(function() {if($('.assetCheck > input').is(':checked')) {this.sound.play(150,'Good');}},this));
 }
@@ -68,6 +68,48 @@ AssetCheckSingle.prototype.transfer = function () {
 	}
 }
 
+AssetCheckSingle.prototype.transferOrReturn = function () {
+	var loc = this.setSpecialAsset('Location');
+	var returnAsset = this.setSpecialAsset('returnNumber');
+	console.log("Transfer or Return called");
+	if (loc.is(':checked') && returnAsset.is(':checked')) {
+		this.checkFailed('You cannot have both transfer and return set.');
+		return;
+	}
+	
+	if (loc.is(':checked')) {
+		this.transfer();
+	} 
+	
+	if (returnAsset.is(':checked')) {
+		this.returnAsset();
+	}
+}
+
+AssetCheckSingle.prototype.returnAsset = function () {
+	console.log("Return called");
+	var returnN = this.setSpecialAsset('returnNumber');
+	if(returnN.is(':checked')) {
+		console.log("Return started");
+		var returnNumber = returnN.parent().find('input[name="returnNumber"]').val();
+		var location = returnN.parent().find('input[name="returnLocation"]').val();
+		var asset = this.asset.val();
+		
+		var string = "order="+returnNumber+"&asset="+asset+"&location="+location;
+		var file = 'addreturnlineasset.php';   
+
+		ajax(string, file,  $.proxy(function(response){
+			if(response != "Re-enter location key"){
+				this.event.trigger('transfered');
+			} else {
+				this.checkFailed(response);
+			}
+		},this), 'returns');
+	} else {
+		this.errorCheck('transfered');
+	}
+}
+
 //I don't overload this function, but I do have my own version.
 md5Function(addSalesOrderLine, 'addSalesOrderLine', "ed638fa787dc7fdab54c8614019aaaf7");
 //This is not a reusable SO function. Consider refactoring to be more reusable.
@@ -85,6 +127,51 @@ AssetCheckSingle.prototype.addToSO = function () {
 		this.errorCheck('finished');
 	}
 }
+/*
+AssetCheckSingle.prototype.finalReload() = function () {
+	if() {
+		this.loadNoCallback();
+	}
+}
+*/
+/*
+md5Function(addReturnlineAsset, "addReturnlineAsset", "7112031b50e735476541b9867c57dc14");
+AssetCheckSingle.prototype.returnAsset = function () {
+	var returnAsset = this.setSpecialAsset('Return');
+	if(returnAsset.is(':checked')) {
+		
+		var returnNumber = returnAsset.parent().find('div > :input').val();
+		var asset = this.asset.val();		
+		var location = document.getElementById('addReturnlineLocation').value;
+		
+		var string = "order="+order+"&asset="+asset+"&location="+location;
+		var file = 'addreturnlineasset.php';   
 
+		ajax(string, file, function(response){
+			if(response != "Re-enter location key"){
+				document.getElementById('addReturnlineAssetTag').value = '';
+				document.getElementById('addReturnlineLocation').value = '';
+				//table = document.getElementById('returnlineTable');
+				$('#addReturnLineWrapper').prepend(response);
+			}
+			else{
+				 document.getElementById("addOrderLineResult").innerHTML = response;
+			}
+		}, 'returns');
 
+		
+		var string = "location="+location + "&assets=" + assets;
+		var file = 'editassettransferprocess.php';
+		ajax(string, file, $.proxy(function(response){
+			if (response.indexOf("Transfer Successful") != -1){
+				this.event.trigger('transfered');
+			}else{
+				this.checkFailed(response);
+			}
+		},this), 'assets');
+	} else {
+		this.errorCheck('transfered');
+	}
+}
 
+*/

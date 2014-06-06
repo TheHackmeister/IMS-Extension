@@ -1,22 +1,17 @@
 ToDo:
 	High Priority
-		Test
-			Adding assets
-				Child assets
-			Saving child assets
-			Print Orderline with AHK
-			Check EAN. (For child assets, but probably wont apply)
-			
+		
 	Medium Priority	
-			
-	Low Priority
-		If number is product, just do that product.
 		Consider a way of auto setting check settings.
 		Removing asset from SO doesn't seem to work.
-		Have popup about alerting everyone of the barcode scanner.
-		Make returns not change page. Add response to page, and remove in the same way so does.	
+		Look at need of returned features. 
 		Should remove added assets after being added to SO.
-	
+		Make returns not change page. Add response to page, and remove in the same way so does.	
+		
+	Low Priority
+		If number is product, just do that product
+		Have popup about alerting everyone of the barcode scanner.
+			
 	Back burner
 		Create Ultimate transfer.
 		Improved Edit Asset: Mandate having some king of check if setting?
@@ -41,7 +36,7 @@ Features
 		When managing a location and only one comes up in the search, it is selected automatically.
 
 	POs
-		Allows better flow for adding product to a PO
+		Allows better flow for adding product to a PO. These also apply to adding child assets (Which can also use AHK barcode commands).
 			Selecting a product moves focus to SN. 
 			Pressing enter (Or scanning) while in the SN field moves the focus to the Location field.
 			When adding a line to a PO
@@ -70,11 +65,13 @@ Features
 		Can print the asset sticker as it gets scanned.
 		Can focus different fields after an asset has loaded. (Currently just notes and ebay auction number)
 		Alerts when an asset does not meet the check criteria. 
+		Can add assets to returns (Won't save the return to unmark as shipped, only adds to return.)
 		Searches by both asset id and sn.
 	
-	Short Report
+	Reports
 		Gives a count for each product. 
-			The same product with different conditions gets put into seperate counts.
+			Short report - The same product with different conditions gets put into seperate counts.
+			Long report - The same product with different CPUs get put into seperate counts.
 	
 	Behind The Scenes 
 		Auto Updates

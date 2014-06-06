@@ -19,7 +19,7 @@ var goods_receipt_addAssetSearchProduct = function (event){
 } 
 
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.
-md5Function(goods_receipt_addLine, "goods_receipt_addLine", "0417193737169515bd0ea61164dc1b01");
+md5Function(goods_receipt_addLine, "goods_receipt_addLine", "59e55e9ec00812acdb4784ff96db76cb");
 //This is temporary until Brad removes the error on line 25.
 var goods_receipt_addLine = function(id){
     var product = document.getElementById('addAssetProductID').value;        
@@ -43,15 +43,21 @@ var goods_receipt_addLine = function(id){
 	var string = "product="+product+"&order="+order+"&sn="+sn+"&qty="+"&desc="+desc + location + condition;
     var file = 'addorderline.php';
 
+	  var persist = document.getElementById('persistAssetInfo').checked;   
+	
     ajax(string, file, function(response){
     	if(response.indexOf("Re-enter location key") == -1 && response.indexOf("SN exists. No duplicate SN allowed.") == -1){          
-	         document.getElementById('addAssetProductID').value = '';
-	         //document.getElementById('addOrderlineQTY').value = '';
+		     var persist = document.getElementById('persistAssetInfo').checked;  
+	         
+			 if(persist == false){
+                document.getElementById('addAssetProductID').value = '';                
+                document.getElementById('addOrderlineLocation').value = '';
+                document.getElementById('addAssetProductSearchItemNumberText').value = '';
+                document.getElementById('addAssetProductSearchText').value = '';
+                $('#addAssetOrderlineConditionDropDown').val('NULL');
+            }
+			 
 	         document.getElementById('addOrderlineSN').value = '';
-	         document.getElementById('addOrderlineLocation').value = '';
-             document.getElementById('addAssetProductSearchItemNumberText').value = '';
-	         document.getElementById('addAssetProductSearchText').value = '';
-             $('#addAssetOrderlineConditionDropDown').val('NULL');
 	         document.getElementById('addOrderlineResult').value = 'Asset Added';
 
 			 var response = $(response);
@@ -157,13 +163,17 @@ var checkEAN = function (id) {
 md5Function(addChildSelectProduct,"addChildSelectProduct", "036843197dd709d7e14f3a66d3ac1ef5");
 var addChildSelectProductOld = addChildSelectProduct;
 var  addChildSelectProduct = function () {
-	$(arguments[1]).closest('#editAssetChildren').find('[placeholder="SN"]').select();
+	if($(arguments[1]).closest('#editAssetChildren') > 0) {
+		$(arguments[1]).closest('#editAssetChildren').find('[placeholder="SN"]').select();
+	} else { 
+		$('#editAssetChildren').find('[placeholder="SN"]').select();
+	}
 	addChildSelectProductOld.apply(this, arguments);
 }
 
 md5Function(addChildAsset,"addChildAsset", "1e8aaa4d4f24caedcfc13bcc43f319be");
 var addChildAsset = function (id){
-	window.skipHide(); //Added
+	window.skipHide = true; //Added
     var asset = id;        
     var product = document.getElementById('addChildProductID'+id).value;
     var qty = document.getElementById('addChildqty'+id).value;
@@ -208,3 +218,36 @@ var addChildAsset = function (id){
     }, 'assets');
 } 
 
+md5Function(editOrderlineChild, "editOrderlineChild", "6d0b9bfad3fb38db71a5216a5e2d1f87");
+var editOrderlineChild =  function(id, e){
+    var row = $(e).closest("tr")[0];
+
+    var string = "ID="+id;
+
+    $("tr").removeClass('selected');
+    $(row).addClass('selected');
+    var file = 'selectasset.php';
+
+    ajax(string, file, function(response){
+    	var parent = $(e).closest('.pluginBody');
+    	var response = response.replace(/onclick="saveAsset\(/g, 'onclick="saveChildAsset(');
+    	if($(parent).attr('id') == 'orderWrapper'){
+		
+			$('#editOrderlineDetailChild').html(response);
+	    	showBreadcrumbNavIcon('edit', 'sixth');
+			
+	    	
+    	}else if($(parent).attr('id') == 'editAssetWrapper'){
+			$('#editAssetChild').html(response);
+	    	showBreadcrumbNavIcon('edit', 'fourth');    	
+	    }
+    	
+    }, 'assets');
+} 
+
+var saveChildAsset = function (asset) {
+	saveAssetOld.apply(this,arguments);
+	
+	saveAssetCondition(asset);		
+	scrollAfterSave(asset);
+}

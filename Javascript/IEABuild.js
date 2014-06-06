@@ -68,6 +68,30 @@ AssetCheck.prototype.buildTextBox = function (specName,specNumber, special) {
 	return el;
 }
 
+AssetCheck.prototype.buildReturn = function () {
+	var el = $('<div/>');
+	var titleCheckbox = $('<input type="checkbox"/>')
+	titleCheckbox.addClass("option");
+	var title = $('<span/>').html('Return');
+	var spec = $('<div/>').hide();
+
+	var returnBox = $('<input type="text" class="inputOption" name="returnNumber" value=""/>');
+	var locationBox = $('<input type="text" class="inputOption" name="returnLocation" value=""/>');
+	var returnName = $('<span/>').html('Return Number');
+	var locationName = $('<span/>').html('Location');
+	spec.addClass("special");
+	
+	el.append(titleCheckbox);
+	el.append(title);
+	spec.append(returnName);	
+	spec.append(returnBox);	
+	spec.append(locationName);	
+	spec.append(locationBox);	
+	el.append(spec);
+	return el;
+}
+
+
 AssetCheck.prototype.buildSearchList = function (specName,specNumber, special) {
 	var el = $('<div/>');
 	var titleCheckbox = $('<input type="checkbox"/>')
@@ -196,6 +220,7 @@ AssetCheck.prototype.buildSetList = function () {
 	container.append(this.buildContainer('setTests','Tests', this.buildTests));
 	container.append(this.buildCheckBox("Scrap","editOrderlineScrapped", 'special'));
 	container.append(this.buildTextBox('Location','Location', 'special'));
+	container.append(this.buildReturn());
 	container.append(this.buildTextBox('Sales Order','salesOrder', 'special'));
 }
 

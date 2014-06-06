@@ -62,4 +62,47 @@ var countInLocation = function () {
 }
 
 
+var countInLocationDetailed = function () {
+	var product;
+	var productArray = new Array();//[index][text|number]
 
+	this.$('#summaryTable tr').each(function(i, obj) {
+		var cpu = $(this).find("td:eq(5)").html() || '';
+	
+		product = $(this).find("td:eq(1)").html() + " " + cpu;
+		
+		if(i == 1) {
+			var newProduct = new Array();
+			newProduct[0] = product;
+			newProduct[1] = 1;
+			productArray.push(newProduct);
+		}
+		
+		var found = false;
+		
+		productArray.forEach(function(i2) {
+			if(product == i2[0]) {
+				i2[1] += 1;
+				found = true;
+			} 
+		});
+		if(found != true) {
+			var newProduct = new Array();
+			newProduct[0] = product;
+			newProduct[1] = 1;
+			productArray.push(newProduct);
+		}
+	});
+	
+	//These remove the extra stuff.
+	productArray = findAndRemove(productArray,"DESC Processor Type");
+	productArray = findAndRemove(productArray,"DESC ");
+	productArray.sort();
+
+	var arrayS = "";
+
+	productArray.forEach(function(i2) {
+		arrayS += i2[1] + " : " + i2[0] + "<br>\n";
+	});
+	this.$("<div>" + arrayS + "</div>").insertAfter('#summaryTable')
+}

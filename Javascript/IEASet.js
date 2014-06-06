@@ -6,6 +6,7 @@ AssetCheck.prototype.setSpecsAndTests = function () {
 	this.setCPUType(this.setSpecialAsset('spec6'));
 	this.setScrapped(this.setSpecialAsset('editOrderlineScrapped'));
 	
+	
 	//Checks each checked option.
 	$('.assetSet .option:checked').parent().children('div').each($.proxy(function(i,el) {
 		el = $(el);

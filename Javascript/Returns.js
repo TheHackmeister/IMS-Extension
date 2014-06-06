@@ -12,6 +12,8 @@ var loadReturnDetail = function () {
 }
 */
 
+//Removed as Brad implemented his own.
+/*
 md5Function(loadReturnDetail, "loadReturnDetail", "16391ccbebdac92decb482657abd84b1");
 var loadReturnDetail = function (id){
 	var string = "ID="+id;
@@ -23,14 +25,14 @@ var loadReturnDetail = function (id){
 		reorganizeReturns();
     }, 'returns');
 } 
-/*
+
 var deleteReturnlineOld = deleteReturnline;
 var deleteReturnline = function () {
 	ajaxCallback(reorganizeReturns, 2);
 	deleteReturnlineOld.apply(this,arguments);
 }
 */
-
+/*
 var reorganizeReturns = function () {
 	if(typeof($('#addReturnTextarea').val()) != 'undefined') return;
 	
@@ -51,7 +53,7 @@ var reorganizeReturns = function () {
 //Should not be global
 	returnForm = new ReturnForm("addReturn");
 }
-
+*/
 var ReturnForm = function (id) {
 	this.id = id || this.generateID();
 	this.listLocation = this.generateElement("Location");
