@@ -47,14 +47,14 @@ try {
 } catch (err) { location.reload(); }
 
 //I don't overload this function, but I do have my own version.
-md5Function(transferAssets, 'transferAssets', "80d068cc18033e6ed4c9bea95a5be9a8");
+md5Function(transferAssets, 'transferAssets', "928056f58778f3b5642522cb7a68aa69");
 //This is not a reusable transfer function. Consider refactoring to be more reusable.
 AssetCheckSingle.prototype.transfer = function () {
 	var loc = this.setSpecialAsset('Location');
 	if(loc.is(':checked')) {
 		var location = loc.parent().find('div > :input').val();
 		var assets = this.asset.val();
-		var string = "location="+location + "&assets=" + assets;
+		var string = "location="+location + "&items=" + assets + "&transferContents=" + "false";
 		var file = 'editassettransferprocess.php';
 		ajax(string, file, $.proxy(function(response){
 			if (response.indexOf("Transfer Successful") != -1){
@@ -68,10 +68,11 @@ AssetCheckSingle.prototype.transfer = function () {
 	}
 }
 
+
 AssetCheckSingle.prototype.transferOrReturn = function () {
 	var loc = this.setSpecialAsset('Location');
 	var returnAsset = this.setSpecialAsset('returnNumber');
-	console.log("Transfer or Return called");
+
 	if (loc.is(':checked') && returnAsset.is(':checked')) {
 		this.checkFailed('You cannot have both transfer and return set.');
 		return;
@@ -83,6 +84,10 @@ AssetCheckSingle.prototype.transferOrReturn = function () {
 	
 	if (returnAsset.is(':checked')) {
 		this.returnAsset();
+	}
+	
+	if(!returnAsset.is(':checked') && !loc.is(':checked')) {
+		this.errorCheck("transfered");
 	}
 }
 
@@ -111,7 +116,7 @@ AssetCheckSingle.prototype.returnAsset = function () {
 }
 
 //I don't overload this function, but I do have my own version.
-md5Function(addSalesOrderLine, 'addSalesOrderLine', "ed638fa787dc7fdab54c8614019aaaf7");
+md5Function(addSalesOrderLine, 'addSalesOrderLine', "70beb7abd8fc57459d0f6d50331a9d97");
 //This is not a reusable SO function. Consider refactoring to be more reusable.
 AssetCheckSingle.prototype.addToSO = function () {
 	var so = this.setSpecialAsset('salesOrder');

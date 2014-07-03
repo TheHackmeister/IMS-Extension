@@ -120,7 +120,7 @@ function getEditAssetID(assetDiv) {
 
 //Automatically locks a PO when saved. Also sets focus to the product description box after save.
 //Also makes sure there is an external ID.
-md5Function(saveAsset,"saveAsset", "7ec27f3cfdcdb3ec8a189aa501d97d1b");
+md5Function(saveAsset,"saveAsset", "aa60c5d07da0f99f6583d93075e905d4");
 var saveAssetOld = saveAsset;
 var saveAsset = function(asset) {
 	var id = "editOrderlineResult" + arguments[0];
@@ -149,15 +149,15 @@ var scrollAfterSave = function (asset) {
 	
 	if(poOrEdit == 'orderWrapper'){
 		if(childAsset) {
-			scrollWindow('fifth');
+			core_scrollWindow('5');
 		} else {
-			scrollWindow('fourth');
+			core_scrollWindow('4');
 		}
 	}else if(poOrEdit == 'editAssetWrapper'){
 		if(childAsset) {
-			scrollWindow('third');
+			core_scrollWindow('3');
 		} else {
-			scrollWindow('first');
+			core_scrollWindow('1');
 		}    	
 	}
 }
@@ -210,6 +210,4 @@ SoundAlert.prototype.play = function (time, freq, callback) {
 		},time);
 }
 var beep = new SoundAlert();
-
-
 

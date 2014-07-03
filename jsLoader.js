@@ -29,6 +29,8 @@ addToPage("Javascript\\IEACheck.js");
 addToPage("Javascript\\IEASet.js");
 
 
+addToPage("Javascript\\Temp.js");
+
 //addToPage("Javascript\\Boxing-CreateLoc.js");
 //addToPage("Javascript\\Boxing-CurrentBox.js");
 //addToPage("Javascript\\Boxing-CurrentLoc.js");

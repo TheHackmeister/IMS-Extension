@@ -28,7 +28,7 @@ var setupIMS = function () {
 
 		document.getElementsByTagName("body")[0].insertBefore(CDiv,document.getElementsByTagName("body")[0].getElementsByTagName('div')[0]);
 	
-		$('<li class="folder root closed"> \
+		$('.leftMenu').find('.folder.root.closed:last').after('<li class="folder root closed"> \
 			<a href="#" onclick="showMenu(this); return false;"> \
 				<div>Improved Pages</div> \
 			</a> \
@@ -39,7 +39,7 @@ var setupIMS = function () {
 					</a> \
 				</li> \
 			</ul> \
-		</li>').insertAfter('.leftMenu > .folder.root.closed:last');
+		</li>');
 	}
 }
 

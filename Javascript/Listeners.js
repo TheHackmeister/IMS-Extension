@@ -12,9 +12,19 @@ $('body').on('change', "#editAssetTransferLocation", function() {$('#editAssetTr
 $('body').on('change', "#editAssetTransferEbayAuction", function() {$('#editAssetTransferAssets').select();});
 $('body').on('change', "#editLocationTransferParent", function() {$('#editLocationTransferLocation').select();});
 
-$('body').on('change', "#searchOrderText", function() {$('[value="search"]').click();});
-$('body').on('change', "#searchAssetText", function() {$('[value="search"]').click();});
-$('body').on('change', "#searchLocationText", function() {$('[value="search"]').click();});
+/*
+$('body').on('change', "#searchText", function(){clickTopListener.apply(this,arguments);});
+$('body').on('keyup', '#searchText', clickTopListener);
+$('body').on('click', '[onclick="searchAsset()"]', function(e) {
+	clickTopListener(1);
+});
+*/
+
+$('body').on('keyup', "#searchText", function(e) {if(e.keyCode == 10 || e.keyCode == 13) $('[value="search"]').click();});
+$('body').on('click', '[value="search"]', function(e) {
+	clickTopOption(1);
+});
+
 
 $('body').on('change', "#addOrderlineSN", function() {$('#addOrderlineLocation').focus();});
 $('body').on('change', "[placeholder='SN']", function() {$(this).parent().parent().find('[placeholder="location"]').focus();});
@@ -27,7 +37,7 @@ $('body').on('click', 'h6:contains(Children)', function() {$(this).parent().pare
 
 var clickTopListener = function (e) {
 	if(e.keyCode == 10 || e.keyCode == 13) {
-		if($('h5:contains(Edit Exchange/Return)').length > 0) {
+/*		if($('h5:contains(Edit Exchange/Return)').length > 0) {
 			clickTopOption(1);
 			searchReturn();
 		} else if ($('h5:contains(Edit Sales Order)').length > 0) {
@@ -41,14 +51,9 @@ var clickTopListener = function (e) {
 			searchLocation();
 		}
 	}
+*/	
+		clickTopOption(1);
+		$('[value="search"]').click();		
+	}
 }
 
-//These won't work after loading warehouse. Should be bound to body.
-// Triggers for selecting PO, SO, or Return
-$('#dashboardBody').on('keyup', '#searchOrderText', clickTopListener);
-$('#dashboardBody').on('keyup', '#searchLocationText', clickTopListener);
-
-
-$('#dashboardBody').on('click', '[onclick="searchAsset()"]', function(e) {
-	clickTopOption(1);
-});

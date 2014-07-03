@@ -23,7 +23,7 @@ try {
 	AssetController.prototype = Object.create(InputForm.prototype);
 } catch (err) { location.reload(); }
 
-md5Function(selectAsset,"selectAsset", "995cb46a96ac21138a7d30edee17bd7f");
+md5Function(selectAsset,"selectAsset", "9c53a5498204f04b94a819911c6b7a83");
 AssetController.prototype.selectAsset = function (id) {
     var string = "ID="+id
     var file = 'selectasset.php';
@@ -115,7 +115,7 @@ AssetController.prototype.checkLoaded = function (currentID) {
 }
 
 //I don't overload, but have my own version.
-md5Function(searchAsset, "searchAsset", "50158f1dda9ac4a88fce91981ab9ac5c");
+md5Function(searchAsset, "searchAsset", "b70bca02b07c8e9a9dc93ac9e83b811b");
 AssetController.prototype.getIDFromSN = function (currentID) {
     var file = 'searcheditassetsn.php';
     var string = "string="+currentID+"&field=sn";
@@ -127,7 +127,7 @@ AssetController.prototype.getIDFromSN = function (currentID) {
 }
 
 AssetController.prototype.getIDFromSNCallback = function (response) {
-	var results = $(response).find('.id a');
+	var results = $(response).find('.divCell a').eq(0);
 	if(results.length == 1) {
 		var id = results.html();
 		hideLoading();

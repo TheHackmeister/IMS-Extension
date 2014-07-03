@@ -38,7 +38,7 @@ var ahkInsertLocationAndEnterOrderLine = function (loc) {
 		lastFocused.parents('#editAssetChildrenWrapper').find('input[value="create"]').click();
 	//If Product.
 	} else if(lastFocused.parents('li').find('h6:contains(Add Product)').length > 0) {
-		lastFocused.parents('li').find('#addProductLineQTY').val(loc);
+		lastFocused.parents('li').find('#addLineProductLocation').val(loc);
 		lastFocused.parents('li').find('input[value="add line"]').click();
 	//Standard Asset.
 	} else {
@@ -142,3 +142,65 @@ function clickNewAssetName() {
 	saveAsset(getEditAssetID());
 	//ajaxCallback();
 }
+
+var ahkInsertProductLineProduct = function(pid, text) {
+	var lastFocused = $(window.lastFocused);
+	
+	var divElement = $('<div id="' + getEditAssetID(lastFocused.parents('#editOrderlineDiv')) + '"/>');	
+	divElement.html(text);
+	
+	goods_receipt_addProductSelectProduct(pid, divElement[0]);
+}
+
+var ahkInsertProductLineCondition = function(cond) {
+	var lastFocused = $(window.lastFocused);
+//This is kind of broken. It updates it with the correct condition, but it's not visible.
+	$('#addProductOrderlineConditionDropDown').val(cond);
+	goods_receipt_addProductSelectCondition();
+}
+
+/*
+
+
+function goods_receipt_addLineProduct(id){
+    var product = document.getElementById('addProductProductID').value;        
+    var order = id
+    var qty = document.getElementById('addProductLineQTY').value;
+    var desc = document.getElementById('addProductSearchText').value;
+
+    var condition = '';
+    if($('#addProductOrderlineConditionDropDown').length > 0){
+        condition = "&condition=" + document.getElementById('addProductOrderlineConditionDropDown').value;
+    }
+    
+    var location = '';
+    if($('#addLineProductLocation').length){
+        location = "&location="+document.getElementById('addLineProductLocation').value;
+    }
+    
+	var string = "product="+product+"&order="+order+"&qty="+qty+"&desc="+desc+condition+location;
+    var file = 'addorderline.php';
+	if(isNaN(qty) || qty == ''){
+		document.getElementById("addOrderlineResult").innerHTML = 'QTY Required';
+		return;
+	}
+	
+    ajax(string, file, function(response){
+    	if(response != "Re-enter location key" && response != "SN exists. No duplicate SN allowed."){          
+	         document.getElementById('addProductProductID').value = '';
+	         document.getElementById('addProductLineQTY').value = '';
+	         document.getElementById('addProductSearchText').value = '';
+	         document.getElementById('addProductOrderlineItemNumberText').value = '';
+             if($('#addLineProductLocation').length){
+	           document.getElementById('addLineProductLocation').value = '';  
+             } 
+	         
+	         $('#orderlineTable').prepend(response);
+	         
+	         $('#addProductOrderlineItemNumberText').focus();
+	    } 
+	    else{
+	         document.getElementById("addOrderlineResult").innerHTML = response;
+	    } 
+    }, 'goods_receipt');
+} */
