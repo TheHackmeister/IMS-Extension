@@ -210,6 +210,42 @@ AssetCheck.prototype.buildCheckList = function (event) {
 	shipped.children(':input:checkbox').click();
 }
 
+
+//These compile the basic html units into usable html. 
+AssetCheck.prototype.buildSimpleCheckList = function (event) {
+	var buildVar = event.target.value;	
+	if (buildVar == "product") this.buildSimpleProduct($(event.target));
+/*	var container = $(event.target).parent().children('div');
+	if(!$(event.target).is(':checked')) {
+		container.html('');
+		return;
+	}
+	var scrap = this.buildCheckBox('Scrapped','Scrap', 'special');
+	var shipped = this.buildCheckBox('Shipped','Shipped', 'special');
+	var type = this.buildOption('Type',this.buildOptionType, 'special');
+
+	container.append(type);
+	container.append(scrap); 
+	container.append(shipped); 
+	var specs = this.buildContainer('checkSpecs','Specs', this.buildSpecs);
+	var tests = this.buildContainer('checkTests','Tests', this.buildTests);
+	container.append(specs);
+	container.append(tests);
+	container.append(this.buildOption('CPU Gen',this.buildOptionCPUGen, 'special'));
+	container.append(this.buildOption('CPU Brand',this.buildOptionCPUBrand, 'special'));
+	container.append(this.buildOption('Condition',this.buildOptionCondition, 'special'));
+	container.append(this.buildCheckBox('Prod Generic','productNotGeneric', 'special', 'Is'));
+	container.append(this.buildSimple('Misc + Notes','productMiscWithNotes', 'special', 'Requires Notes'));
+	
+	type.children(':input:checkbox').click();
+	scrap.children(':input:checkbox').click();
+	shipped.children(':input:checkbox').click();
+*/
+
+}
+
+
+
 AssetCheck.prototype.buildSetList = function () {
 	var container = $(event.target).parent().children('div');
 	if(!$(event.target).is(':checked')) {
@@ -414,5 +450,16 @@ AssetCheck.prototype.buildOptionSelect = function () {
 				<option value="Asset ID">Asset ID</option> \
 				<option value="End of Notes">End of Notes</option> \
 				<option value="eBay Auction Number">Auction Number</option> \
+			</select>');
+}
+
+AssetCheck.prototype.buildOptionCheckType = function () {
+	return $('<span>Check Type</span> \
+			<select class="inputOption" name="CheckType"> \
+				<option value="null"></option> \
+				<option value="Product">Product</option> \
+				<option value="DC">Not Working</option> \
+				<option value="IS">Not Working</option> \
+				<option value="Advanced">Advanced</option> \
 			</select>');
 }

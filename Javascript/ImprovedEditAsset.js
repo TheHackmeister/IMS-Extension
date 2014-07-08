@@ -24,12 +24,13 @@ var AssetCheckSingle = function (id,controlDiv) {
 		
 	//This builds the controls. 
 	var container = $('<div style="margin-top:65px;"/>');
+	container.append(this.buildOption('Check Type',this.buildOptionCheckType, 'special'));
 	container.append(this.buildContainer('assetCheck','Check', this.buildCheckList));
 	container.append(this.buildContainer('assetSet', 'Set', this.buildSetList));
 	container.append(this.buildContainer('options', 'Options', this.buildOptions));
 	this.controlDiv.append(container);
 
-	
+	container.find('[name="CheckType"]').on('change', this.buildSimpleCheckList);
 	//Events.
 	this.event.on("keyup", $.proxy(function(event) {if(event.keyCode == 13 || event.keyCode == 10) this.load();},this));
 //	this.event.on('change', $.proxy(function(event) {this.load();},this));
