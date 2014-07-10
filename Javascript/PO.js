@@ -104,7 +104,6 @@ var goods_receipt_addLine = function() {
 
 md5Function(editOrderline, 'editOrderline', "d5051e5d92f5e65e700ba6cddac031c9");
 var editOrderline = function (id, e){
-	console.log(arguments);
     var row = $(e).closest("tr")[0];
 
     var string = "ID="+id;
@@ -120,7 +119,7 @@ var editOrderline = function (id, e){
 }
 
 var addOrderLineListener = function() {
-	if($('#addOrderlineResult').eq(0).html() != "") {
+	if($('#addOrderlineResult').eq(0).html() != "Asset Added") {
 		hideLoading();
 		return;
 	}
