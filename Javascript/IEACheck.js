@@ -128,9 +128,12 @@ AssetCheck.prototype.checkText = function (el) {
 AssetCheck.prototype.checkProduct = function (el) {
 	if(el.is(':checked')) {
 		var expected = el.parent().children('div').children('.searchList').val();
-		var assetProduct = 	this.editAssetDiv.find('#editOrderlineProductSearchText' + getEditAssetID(this.editAssetDiv)).val();
+		var assetProduct = this.editAssetDiv.find('#editOrderlineProductSearchText' + getEditAssetID(this.editAssetDiv)).val();
+		
+		var expectedID = el.parent().children('div').children('[name="ProductHidden"]').val();
+		var actualID = this.editAssetDiv.find('#editOrderlineProductID' + getEditAssetID(this.editAssetDiv)).val();
 			
-		if(expected.toLowerCase() != assetProduct.toLowerCase()) {
+		if(expected.toLowerCase() != assetProduct.toLowerCase() && expectedID != actualID) {
 			this.checkFailed(el.parent().children('span').html().toLowerCase(),expected,assetProduct);
 			return false;
 		}
