@@ -16,15 +16,68 @@ var ajaxCallback = function (func, ct) {
 //	$('#loadingWrapper').one('hasFinished',$.proxy(wrapper,this));
 }
 
+// Have to override this function to get hide loading to work. 
+md5Function(ajax,"ajax", "4223609c7a791584de980ef37abe78c2");
+var ajax = function(string, file, code, plugin, path){  
+	showLoading();
+    if(plugin){
+        string = string + "&file=" + file + "&plugin="+plugin;
+    }else{
+        string = string + "&file=" + file;
+    }
+
+    if(path){
+        string += "&path="+path;
+    }
+    var filePath = getJSON();
+    if(filePath != '' && filePath != 'undefined'){
+	    var file = filePath + '/ajaxhandler.php';
+    }else{
+	    var file = 'ajaxhandler.php';
+    }
+
+    var response;
+    $.ajax({
+        url: file,
+        data: string,
+        async: true,
+        dataType: "html",
+        type: "POST",
+        error: function(xhr, status, error) {
+        	alert(status+" "+error+"\n"+xhr.responseText);
+        	
+            hideLoading();
+        },
+        complete: function(data, status){
+	        //alert(data.responseText);
+        	response = data.responseText;
+        	if(typeof code == 'function'){
+                code(response);
+            }else if(typeof code == 'string'){
+                eval(code);
+            }
+            
+            if($(".chosen-select").length > 0){
+                $(".chosen-select").chosen();
+            }
+
+            $(document).foundation();
+			hideLoading(); //Added this.
+        },
+
+    }); 
+
+    return response;      
+} 
 
 //This overloads the loading functions to allow skipping hiding of a loading page. This helps AHK follow what's going on the page better.
-md5Function(showLoading,"showLoading", "e1775ec305172c883c0d0f04c8f420a1");
+md5Function(showLoading,"showLoading", "c2bc4ce1b799cc30715f5c576f304226");
 var showLoadingOld = showLoading;
 showLoading = function(){
 	document.title = 'IMS (Loading)';
 	showLoadingOld.apply(this,arguments);
 }
-md5Function(hideLoading,"hideLoading","6f168be39aba932e6bd28a27a1249c22");
+md5Function(hideLoading,"hideLoading","b39bc81027a83c750331837f786123ad");
 var hideLoadingOld = hideLoading;
 hideLoading = function (){
 	if(window.skipHide)
