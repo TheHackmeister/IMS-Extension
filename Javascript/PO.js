@@ -1,12 +1,18 @@
 
 
 //Create a replacement function for the AHK program. 
-md5Function(goods_receipt_addAssetSelectProduct, "goods_receipt_addAssetSelectProduct", "f73794d7c2c01f8fd9091f6d6cc6b870");
+md5Function(goods_receipt_addAssetSelectProduct, "goods_receipt_addAssetSelectProduct", "cfaaf7cb2bb59599c80e9f295e6926cb");
 var goods_receipt_addAssetSelectProductOld = goods_receipt_addAssetSelectProduct;
 var goods_receipt_addAssetSelectProduct = function() {
 	$('#addOrderlineSN').focus();
 	goods_receipt_addAssetSelectProductOld.apply(this,arguments);
 }
+
+md5Function(goods_receipt_addAssetSelectProductGetConditions, "goods_receipt_addAssetSelectProductGetConditions", "43501060ab6b74334732a7f31acce90b");
+var goods_receipt_addAssetSelectProductGetConditions = function() {
+
+}
+
 
 //I override this to not trigger when the first character is a ;, which is what I start all of my AHK shortcuts with.
 md5Function(goods_receipt_addAssetSearchProduct,"goods_receipt_addAssetSearchProduct", "07686248460e526e055b9b6ba5f43d22");
