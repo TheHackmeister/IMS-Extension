@@ -22,7 +22,7 @@ var ahkInsertCPUType = function (cpuid, text) {
 
 var ahkSaveAsset = function () {
 	var lastFocused = $(window.lastFocused);
-	var asset = getEditAssetID(lastFocused.parents('#editOrderlineDiv'));
+	var asset = getEditAssetID(lastFocused.parents('#editOrderlineDiv')) || getEditAssetID();
 	if(lastFocused.parents('#editAssetChildrenWrapper').length > 0) {
 		saveChildAsset(asset);
 	} else {
