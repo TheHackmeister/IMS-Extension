@@ -114,15 +114,17 @@ var addOrderLineListener = function() {
 		} 
 	}
 	
-	//$('input:button[value="print tag"]').before('<input type="button" class="button" value="save and print" onclick="saveAndPrint();"> ');
+	$('input:button[value="print tag"]').before('<input type="button" class="button" value="save and print" onclick="saveAndPrint();"> ');
 	
 	$('#editOrderlineExternalAsset').focus().val($('#editOrderlineExternalAsset').val());
 };
 
 
-var saveAndPrint = function() {
+var saveAndPrint = function(asset) {
+	asset = asset || getEditAssetID();
+	
 	ajaxCallback(function (){$('input:button[value="print tag"]').click();},3);
-	saveAsset(getEditAssetID());
+	saveAsset(asset);
 }
 
 //Returns true if actions should be stopped. False if actions should continue.

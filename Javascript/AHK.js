@@ -26,7 +26,7 @@ var ahkSaveAsset = function () {
 	if(lastFocused.parents('#editAssetChildrenWrapper').length > 0) {
 		saveChildAsset(asset);
 	} else {
-		saveAsset(asset);
+		saveAndPrint(asset);
 	}		
 }
 

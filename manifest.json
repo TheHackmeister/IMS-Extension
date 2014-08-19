@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "IMS Improved",
-  "version": "1.7.9.0",
+  "version": "1.7.10.0",
   "author": "Spencer Hachmeister",	
   "description": "Makes improvements to IMS",
   "permissions": ["storage", "http://63.253.103.78/dashboard.php*"],
