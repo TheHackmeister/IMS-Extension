@@ -188,7 +188,7 @@ var saveAssetListener = function (asset,id) {
 		
 		saveAssetCondition(asset);		
 		scrollAfterSave(asset);
-		if($('#persistAssetInfo').is(':checked')) {
+		if($('#singleAssetProduct').is(':checked')) {
 			 $('#addOrderlineSN').focus();
 		} else {
 			$('#addAssetProductSearchText').focus();    
