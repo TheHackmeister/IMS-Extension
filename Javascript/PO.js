@@ -8,7 +8,7 @@ var goods_receipt_addAssetSelectProduct = function() {
 	goods_receipt_addAssetSelectProductOld.apply(this,arguments);
 }
 
-md5Function(goods_receipt_addAssetSelectProductGetConditions, "goods_receipt_addAssetSelectProductGetConditions", "059bbd8cc0d95fb56b2877d211ca3e6e");
+md5Function(goods_receipt_addAssetSelectProductGetConditions, "goods_receipt_addAssetSelectProductGetConditions", "43501060ab6b74334732a7f31acce90b");
 var goods_receipt_addAssetSelectProductGetConditions = function() {
 
 }
@@ -26,15 +26,27 @@ var goods_receipt_addAssetSearchProduct = function (event){
 
 //Calls the addOrderline function, and sets up callback for clicking print and setting focus to the External Asset field upon load.
 md5Function(goods_receipt_addLine, "goods_receipt_addLine", "22d35bda3e9a99cd683e6cb9e22ed2e0");
+//This is temporary until Brad removes the error on line 25.
 var goods_receipt_addLine = function(id){
     var product = document.getElementById('addAssetProductID').value;        
     var order = id;
+    //var qty = document.getElementById('addOrderlineQTY').value;
     var sn = document.getElementById('addOrderlineSN').value;
+
+    var condition = '';
+    if($('#addAssetOrderlineConditionDropDown').length > 0){
+        condition = "&condition=" + document.getElementById('addAssetOrderlineConditionDropDown').value;
+    }
+
+    var location = '';
+    if($('#addOrderlineLocation').length){
+        location = "&location="+document.getElementById('addOrderlineLocation').value;
+    }
 
     var desc = document.getElementById('addAssetProductSearchText').value;
     
     //var string = "product="+product+"&order="+order+"&qty="+qty+"&sn="+sn+"&location="+location+"&desc="+desc;
-	var string = "product="+product+"&order="+order+"&sn="+sn+"&qty="+"&desc="+desc;
+	var string = "product="+product+"&order="+order+"&sn="+sn+"&qty="+"&desc="+desc + location + condition;
     var file = 'addorderline.php';
 	
     ajax(string, file, function(response){
@@ -52,18 +64,32 @@ var goods_receipt_addLine = function(id){
                 }
             }
 
+            if($('#singleAssetCondition')){
+                if(!$('#singleAssetCondition').prop('checked')){
+                    $('#addAssetOrderlineConditionDropDown').val('');
+                    $('#addAssetOrderlineConditionDropDown').trigger("chosen:updated");
+                }
+            }
+
             if($('#singleAssetSN')){
                 if(!$('#singleAssetSN').prop('checked')){
                     $('#addOrderlineSN').val('');
                     $('#addOrderlineSN').focus();
                 }
             }
-			
+
+            if($('#singleAssetLocation')){
+                if(!$('#singleAssetLocation').prop('checked')){
+                    $('#addOrderlineLocation').val('');
+                }
+            }
+
             document.getElementById("addOrderlineResult").innerHTML = 'Asset Added';            
 			var response = $(response);
 			$('#orderlineTable').prepend(response);
 			 
 			//Begin add
+			response.find('a:contains(print)')[0].click();
 			response.find('a')[0].click();
 			//End add
 	    } 
@@ -113,17 +139,9 @@ var addOrderLineListener = function() {
 			$('[value="APPLY"]').click();
 		} 
 	}
-	
-	//$('input:button[value="print tag"]').before('<input type="button" class="button" value="save and print" onclick="saveAndPrint();"> ');
-	
 	$('#editOrderlineExternalAsset').focus().val($('#editOrderlineExternalAsset').val());
 };
 
-
-var saveAndPrint = function() {
-	ajaxCallback(function (){$('input:button[value="print tag"]').click();},3);
-	saveAsset(getEditAssetID());
-}
 
 //Returns true if actions should be stopped. False if actions should continue.
 var checkEAN = function (id) {
