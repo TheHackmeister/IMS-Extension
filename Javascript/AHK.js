@@ -17,7 +17,7 @@ var ahkInsertProduct = function (pid, text) {
 
 md5Function(selectOrderlineSpec, "selectOrderlineSpec", "a793cc277d0a62be1e7d587966a45bbf");
 var ahkInsertCPUType = function (cpuid, text) {
-		selectOrderlineSpec(cpuid, 6, $('<div/>').html(text)[0], getEditAssetID());
+		selectOrderlineSpec(cpuid, 45, $('<div/>').html(text)[0], getEditAssetID());
 }
 
 var ahkSaveAsset = function () {
@@ -30,20 +30,31 @@ var ahkSaveAsset = function () {
 	}		
 }
 
-var ahkInsertLocationAndEnterOrderLine = function (loc) {
+var ahkInsertLocationAndEnterOrderLine = function () {
 	var lastFocused = window.lastFocused;
 	//If child asset.
 	if(lastFocused.parents('#editAssetChildrenWrapper').length > 0) { 
-		lastFocused.parents('#editAssetChildrenWrapper').find('[placeholder="location"]').val(loc);
+	//	lastFocused.parents('#editAssetChildrenWrapper').find('[placeholder="location"]').val(loc);
 		lastFocused.parents('#editAssetChildrenWrapper').find('input[value="create"]').click();
 	//If Product.
 	} else if(lastFocused.parents('li').find('h6:contains(Add Product)').length > 0) {
-		lastFocused.parents('li').find('#addLineProductLocation').val(loc);
+	//	lastFocused.parents('li').find('#addLineProductLocation').val(loc);
 		lastFocused.parents('li').find('input[value="add line"]').click();
 	//Standard Asset.
 	} else {
-		$('#addOrderlineLocation').val(loc); 
+	//	$('#addOrderlineLocation').val(loc); 
 		$('input:button[value="add line"]')[0].click();
+	}
+}
+
+var ahkInsertTest = function (test) {
+	// No child assets? Don't need editDiv.
+	//var editDiv = window.lastFocused.parents('#editOrderlineDiv');
+	
+	if($('input:radio[name="' + test + '"]').eq("0").attr("checked")) {
+		$('input:radio[name="' + test + '"]').eq("1").click();	
+	}else {
+		$('input:radio[name="' + test + '"]').eq("0").click();
 	}
 }
 

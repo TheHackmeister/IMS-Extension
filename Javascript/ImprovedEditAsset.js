@@ -116,13 +116,20 @@ AssetCheckSingle.prototype.returnAsset = function () {
 }
 
 //I don't overload this function, but I do have my own version.
-md5Function(addSalesOrderLine, 'addSalesOrderLine', "70beb7abd8fc57459d0f6d50331a9d97");
+md5Function(addSalesOrderLine, 'addSalesOrderLine', "67e53e278be1e7e42bc6b06982cbc04e");
 //This is not a reusable SO function. Consider refactoring to be more reusable.
 AssetCheckSingle.prototype.addToSO = function () {
 	var so = this.setSpecialAsset('salesOrder');
 	if(so.is(':checked')) {
 		var sorder = so.parent().find('div > :input').val();
-		var string = "order="+sorder+"&assets="+this.asset.val();
+		var price = '';
+		/* Price has not been implemented in my code yet. 
+		if($('#transferPrice').length > 0){
+			price = $('#transferPrice').val();
+		}
+		*/
+		
+		var string = "order="+sorder+"&assets="+this.asset.val()+"&price="+price;
 		var file = 'addsalesorderline.php';
 
 		ajax(string, file, $.proxy(function(response){

@@ -184,7 +184,7 @@ var saveAssetListener = function (asset,id) {
 		//If we're not adding to a PO, don't lock condition. 
 		if($('h5:contains(Grading/Receiving)').length < 1) return;
 
-		if(checkEAN(asset)) return;
+		//if(checkEAN(asset)) return;
 		
 		saveAssetCondition(asset);		
 		scrollAfterSave(asset);
